@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CDMX Bar Guide — Handshake Speakeasy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./CDMX Bar Guide — Handshake Speakeasy_files/css2" rel="stylesheet">
+<script src="./CDMX Bar Guide — Handshake Speakeasy_files/qrcode.min.js.descargar"></script>
+<link rel="stylesheet" href="./CDMX Bar Guide — Handshake Speakeasy_files/leaflet.min.css">
+<script src="./CDMX Bar Guide — Handshake Speakeasy_files/leaflet.min.js.descargar"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black:#0a0a0a; --card:#1c1c1c; --border:#2a2a2a;
+    --gold:#c9a84c; --gold-lt:#e2c06e; --gold-dim:#7a5f28;
+    --white:#f0ebe2; --muted:#7a7570;
+    --ff-d:'Cormorant Garamond',Georgia,serif;
+    --ff-b:'Montserrat',sans-serif;
+  }
+  html { scroll-behavior:smooth; }
+  body { background:var(--black); color:var(--white); font-family:var(--ff-b); font-weight:300; font-size:13px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+  /* HEADER */
+  .site-header { position:relative; text-align:center; padding:72px 24px 56px; border-bottom:1px solid var(--border); overflow:hidden; }
+  .site-header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(201,168,76,.10) 0%,transparent 70%); pointer-events:none; }
+  .header-eyebrow { font-size:9px; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:24px; }
+  .header-rule { width:32px; height:1px; background:var(--gold); display:inline-block; vertical-align:middle; margin:0 12px; opacity:.6; }
+  .site-title { font-family:var(--ff-d); font-size:clamp(38px,8vw,72px); font-weight:300; line-height:1.05; margin-bottom:8px; }
+  .site-title em { font-style:italic; color:var(--gold-lt); }
+  .site-subtitle { font-family:var(--ff-d); font-size:clamp(14px,2.5vw,19px); font-weight:300; font-style:italic; color:var(--muted); margin-bottom:40px; letter-spacing:.02em; }
+  .nav-pills { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; max-width:700px; margin:0 auto; }
+  .nav-pill { font-size:9px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:6px 14px; transition:border-color .2s,color .2s; }
+  .nav-pill:hover { border-color:var(--gold-dim); color:var(--gold-lt); }
+
+  /* MAIN */
+  main { max-width:980px; margin:0 auto; padding:0 20px 80px; }
+
+  /* MAP */
+  .map-block { margin-top:56px; }
+  .map-section-header, .section-header { display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+  .section-header { margin-bottom:28px; }
+  .map-label, .section-label { font-size:8.5px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); white-space:nowrap; }
+  .map-line, .section-line { flex:1; height:1px; background:linear-gradient(to right,var(--gold-dim),transparent); }
+  .map-title, .section-title { font-family:var(--ff-d); font-size:clamp(22px,4vw,32px); font-weight:300; font-style:italic; color:var(--white); margin-bottom:16px; }
+  .section-title { margin-bottom:4px; }
+  .map-filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .map-filter-btn { font-size:9px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); background:none; border:1px solid var(--border); padding:5px 12px; cursor:pointer; transition:all .2s; }
+  .map-filter-btn:hover, .map-filter-btn.active { border-color:var(--gold); color:var(--gold-lt); background:rgba(201,168,76,.06); }
+  #map-wrapper { position:relative; width:100%; height:520px; border:1px solid var(--border); overflow:hidden; }
+  #leaflet-map { width:100%; height:100%; }
+  .map-legend { display:flex; flex-wrap:wrap; gap:12px 24px; margin-top:12px; }
+
+  /* Leaflet popup override */
+  .leaflet-popup-content-wrapper {
+    background:#111 !important;
+    border:1px solid #7a5f28 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    padding:0 !important;
+  }
+  .leaflet-popup-content {
+    margin:12px 16px !important;
+    color:#f0ebe2 !important;
+    font-family:'Montserrat',sans-serif !important;
+    font-size:12px !important;
+    font-weight:300 !important;
+    line-height:1.5 !important;
+  }
+  .leaflet-popup-tip { background:#111 !important; }
+  .leaflet-popup-close-button { color:#7a7570 !important; font-size:16px !important; top:6px !important; right:8px !important; }
+  .popup-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:400; color:#f0ebe2; margin-bottom:3px; }
+  .popup-tipo { font-size:8.5px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:#c9a84c; margin-bottom:6px; }
+  .popup-addr { font-size:10.5px; color:#7a7570; margin-bottom:8px; }
+  .popup-links { display:flex; gap:10px; }
+  .popup-links a { font-size:10px; color:#7a5f28; text-decoration:none; transition:color .15s; }
+  .popup-links a:hover { color:#e2c06e; }
+  /* Handshake anchor popup */
+  .popup-hs .popup-name { color:#c9a84c; }
+  .popup-hs .popup-tipo { color:#e2c06e; }
+  .leaflet-container { font-family:'Montserrat',sans-serif; }
+  .legend-item { display:flex; align-items:center; gap:7px; font-size:9px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+  /* SECTION BLOCK */
+  .section-block { margin-top:64px; }
+
+  /* CARD GRID */
+  .bar-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .bar-card { background:var(--card); padding:20px 20px 16px; position:relative; transition:background .18s; }
+  .bar-card:hover { background:#222; }
+  .bar-card::after { content:''; position:absolute; top:0; left:0; width:2px; height:0; background:var(--gold); transition:height .25s ease; }
+  .bar-card:hover::after { height:100%; }
+
+  .bar-name { font-family:var(--ff-d); font-size:17px; font-weight:400; color:var(--white); line-height:1.2; margin-bottom:4px; }
+  .bar-tipo { font-size:9px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .bar-address { font-size:11px; color:var(--muted); line-height:1.4; margin-bottom:10px; }
+
+  /* HOURS */
+  .bar-hours { margin-bottom:10px; }
+  .hours-toggle { font-size:9px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-dim); cursor:pointer; display:flex; align-items:center; gap:6px; transition:color .15s; background:none; border:none; padding:0; }
+  .hours-toggle:hover { color:var(--gold); }
+  .hours-toggle svg { transition:transform .2s; }
+  .hours-toggle.open svg { transform:rotate(180deg); }
+  .hours-list { display:none; margin-top:6px; padding-left:0; list-style:none; }
+  .hours-list.visible { display:block; }
+  .hours-list li { font-size:10px; color:var(--muted); line-height:1.7; display:flex; gap:6px; }
+  .hours-list li .day { color:#5a5550; min-width:82px; }
+  .hours-list li.today .day { color:var(--gold); }
+  .hours-list li.today .time { color:var(--white); }
+
+  /* LINKS ROW */
+  .bar-links { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .bar-ig, .bar-gmaps { font-size:10px; color:var(--gold-dim); text-decoration:none; letter-spacing:.04em; transition:color .15s; display:flex; align-items:center; gap:4px; }
+  .bar-ig:hover, .bar-gmaps:hover { color:var(--gold-lt); }
+  .link-sep { width:1px; height:10px; background:var(--border); }
+
+  /* FOOTER */
+  .footer-block { margin-top:80px; border-top:1px solid var(--border); padding-top:56px; display:flex; flex-direction:column; align-items:center; gap:24px; text-align:center; }
+  .footer-label { font-size:9px; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); }
+  #qr-container { padding:14px; background:var(--white); display:inline-block; }
+  .footer-copy { font-family:var(--ff-d); font-size:13px; font-style:italic; color:var(--muted); }
+  .footer-sig { font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--border); margin-top:32px; padding-top:24px; border-top:1px solid var(--border); width:100%; }
+
+  @media(max-width:480px){ .bar-grid{grid-template-columns:1fr;} .site-header{padding:48px 20px 40px;} #map-wrapper{height:360px;} }
+</style>
+</head>
+<body class="">
+
+<header class="site-header">
+  <p class="header-eyebrow"><span class="header-rule"></span>Handshake Speakeasy<span class="header-rule"></span></p>
+  <h1 class="site-title">Ciudad de<br><em>México</em></h1>
+  <p class="site-subtitle">Una selección de bares recomendados por Handshake</p>
+  <nav class="nav-pills">
+    <a class="nav-pill" href="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html#mapa">Mapa</a>
+    <a class="nav-pill" href="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html#cocktail">Cocktail Bars</a>
+    <a class="nav-pill" href="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html#agave">Agave &amp; Mezcal</a>
+    <a class="nav-pill" href="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html#musica">Listening Bars</a>
+    <a class="nav-pill" href="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html#rooftop">Rooftops</a>
+    <a class="nav-pill" href="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html#noche">Late Night</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- MAP -->
+<section class="map-block" id="mapa">
+  <div class="map-section-header"><span class="map-label">Mapa interactivo</span><div class="map-line"></div></div>
+  <h2 class="map-title">46 bares, una ciudad</h2>
+  <div class="map-filters" id="map-filters">
+    <button class="map-filter-btn" data-cat="all">Todos</button>
+    <button class="map-filter-btn active" data-cat="cocktail">Cocktail Bars</button>
+    <button class="map-filter-btn" data-cat="agave">Agave &amp; Mezcal</button>
+    <button class="map-filter-btn" data-cat="musica">Listening Bars</button>
+    <button class="map-filter-btn" data-cat="rooftop">Rooftops</button>
+    <button class="map-filter-btn" data-cat="noche">Late Night</button>
+  </div>
+  <div id="map-wrapper">
+    <div id="leaflet-map" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(375px, 1166px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 19; transform: translate3d(-811px, -1302px, 0px) scale(1);"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29164.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(806px, 448px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29163.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(806px, 192px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29164(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(550px, 448px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29164(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1062px, 448px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29165.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(806px, 704px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29163(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(550px, 192px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29163(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1062px, 192px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29165(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(550px, 704px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29165(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1062px, 704px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29164(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(294px, 448px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29164(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1318px, 448px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29163(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(294px, 192px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29163(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1318px, 192px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29165(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(294px, 704px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29165(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1318px, 704px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29162.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(806px, -64px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29162(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(550px, -64px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29162(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1062px, -64px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29162(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(294px, -64px, 0px); opacity: 1;"><img alt="" src="./CDMX Bar Guide — Handshake Speakeasy_files/29162(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1318px, -64px, 0px); opacity: 1;"></div><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 18; transform: translate3d(19px, -222px, 0px) scale(2);"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -17px; margin-top: -34px; width: 34px; height: 34px; transform: translate3d(-1585px, -1739px, 0px); z-index: -739;"><div style="
+    width:34px;height:34px;
+    background:#c9a84c;
+    border:3px solid #fff;
+    border-radius:50% 50% 50% 0;
+    transform:rotate(-45deg);
+    box-shadow:0 2px 8px rgba(0,0,0,.5);
+    display:flex;align-items:center;justify-content:center;
+  "><span style="transform:rotate(45deg);font-size:14px;line-height:1;">★</span></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-183px, -1319px, 0px); z-index: -1319;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(277px, -855px, 0px); z-index: -855;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-460px, -1389px, 0px); z-index: -1389;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-334px, -1382px, 0px); z-index: -1382;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-247px, -1254px, 0px); z-index: -1254;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-1px, -1467px, 0px); z-index: -1467;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-63px, -1497px, 0px); z-index: -1497;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(318px, -1458px, 0px); z-index: -1458;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-553px, -1271px, 0px); z-index: -1271;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(127px, -1170px, 0px); z-index: -1170;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(146px, -1017px, 0px); z-index: -1017;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(91px, -983px, 0px); z-index: -983;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-326px, -1025px, 0px); z-index: -1025;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(147px, -1085px, 0px); z-index: -1085;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-297px, -592px, 0px); z-index: -592;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-178px, -1528px, 0px); z-index: -1528;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-44px, -1147px, 0px); z-index: -1147;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-246px, -1048px, 0px); z-index: -1048;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(100px, -1005px, 0px); z-index: -1005;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-218px, -1031px, 0px); z-index: -1031;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-61px, -1239px, 0px); z-index: -1239;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-3px, -822px, 0px); z-index: -822;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(63px, -481px, 0px); z-index: -481;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(227px, -1028px, 0px); z-index: -1028; outline-style: none;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-427px, -1151px, 0px); z-index: -1151;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-578px, -704px, 0px); z-index: -704;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-355px, -1124px, 0px); z-index: -1124;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-1640px, -1620px, 0px); z-index: -1620;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-233px, -994px, 0px); z-index: -994;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -6px; margin-top: -6px; width: 13px; height: 13px; transform: translate3d(-1669px, -1623px, 0px); z-index: -1623;"><div style="
+      width:13px;height:13px;
+      background:#c9a84c;
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div></div></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"><div class="leaflet-popup  leaflet-zoom-animated" style="opacity: 1; transform: translate3d(227px, -1038px, 0px); bottom: -7px; left: -100px;"><div class="leaflet-popup-content-wrapper"><div class="leaflet-popup-content" style="width: 167px;"><div>
+    <div class="popup-name">Bar Félix</div>
+    <div class="popup-tipo">Bar · Restaurant-bar</div>
+    <div class="popup-addr">Álvaro Obregón 64, Roma Norte</div>
+    <div class="popup-links">
+      <a href="https://instagram.com/_barfelix" target="_blank">@_barfelix</a>
+      <a href="https://maps.google.com/?q=Bar+Felix+Alvaro+Obregon+64+Roma+Norte+CDMX" target="_blank">Ver en Maps →</a>
+    </div>
+  </div></div></div><div class="leaflet-popup-tip-container"><div class="leaflet-popup-tip"></div></div><a class="leaflet-popup-close-button" role="button" aria-label="Close popup" href="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html#close"><span aria-hidden="true">×</span></a></div></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(3.7674e+06px, 7.46593e+06px, 0px) scale(32768);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com/" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></div></div></div></div>
+  </div>
+  <div class="map-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#c9a84c"></div>Cocktail Bar</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7fbf9e"></div>Agave &amp; Mezcal</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9b7fcd"></div>Listening Bar</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#5bafd6"></div>Rooftop</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d67a5b"></div>Late Night</div>
+  </div>
+</section>
+
+<!-- COCKTAIL BARS -->
+<section class="section-block" id="cocktail">
+  <div class="section-header"><span class="section-label">I</span><div class="section-line"></div></div>
+  <h2 class="section-title">Cocktail Bars</h2>
+  <div class="bar-grid" id="grid-cocktail"><div class="bar-card">
+    <p class="bar-name">Long Story Short</p>
+    <p class="bar-tipo">Cocktail bar</p>
+    <p class="bar-address">Londres 178, Juárez</p>
+    <div class="bar-hours">
+    <button class="hours-toggle open" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list visible"><li class=""><span class="day">Lun:</span><span class="time">5pm – 1am</span></li><li class=""><span class="day">Mar:</span><span class="time">5pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/longstoryshortcdmx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @longstoryshortcdmx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Long+Story+Short+Bar+Juarez+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">FO+MA / Form + Matter</p>
+    <p class="bar-tipo">Cocktail bar</p>
+    <p class="bar-address">San Luis Potosí 37, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">7pm – 1am</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 1:30am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 1:30am</span></li><li class=""><span class="day">Dom:</span><span class="time">6pm – 1am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/fomabar.mx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @fomabar.mx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=FORM+MATTER+San+Luis+Potosi+37+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">King Cole Bar</p>
+    <p class="bar-tipo">Hotel bar · Cocktail bar</p>
+    <p class="bar-address">St. Regis, Reforma 439, 3er piso</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">11am – 2am</span></li><li class=""><span class="day">Mar:</span><span class="time">11am – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">11am – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">11am – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">11am – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">11am – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">11am – 1am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/stregismexicocity" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @stregismexicocity
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=King+Cole+Bar+St+Regis+Mexico+City" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Ahorita Cantina</p>
+    <p class="bar-tipo">Cantina · Cocktail bar</p>
+    <p class="bar-address">Reforma 390, Plaza Alma, 1er piso, Juárez</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">6pm – 2am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/ahoritacantina" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @ahoritacantina
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Ahorita+Cantina+Reforma+390+Juarez+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Chow Chow</p>
+    <p class="bar-tipo">Cocktail bar · Comida china</p>
+    <p class="bar-address">Av. Chapultepec 403, Juárez</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Mar:</span><span class="time">7pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">7pm – 2am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/chowchowh" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @chowchowh
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Chow+Chow+House+Chapultepec+403+Juarez+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Kaito</p>
+    <p class="bar-tipo">Cocktail bar · Comida japonesa</p>
+    <p class="bar-address">Hamburgo 70B, Juárez</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">5pm – 1am</span></li><li class=""><span class="day">Mar:</span><span class="time">5pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">5pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">12:30pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">12:30pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">12:30pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">12:30pm – 1am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/kaitodelvalle" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @kaitodelvalle
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Kaito+del+Valle+Hamburgo+70+Juarez+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Xaman</p>
+    <p class="bar-tipo">Speakeasy · Cocktail bar</p>
+    <p class="bar-address">Copenhague 6, Juárez</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">7pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/xamanbar" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @xamanbar
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Xaman+Bar+Copenhague+6+Juarez+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Hanky Panky</p>
+    <p class="bar-tipo">Speakeasy · Cocktail bar</p>
+    <p class="bar-address">Turín 52, Juárez</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">5pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">5pm – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/hankypankydf" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @hankypankydf
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Hanky+Panky+Cocktail+Bar+Turin+52+Juarez+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Fifty Mils</p>
+    <p class="bar-tipo">Hotel bar · Cocktail bar</p>
+    <p class="bar-address">Four Seasons, Reforma 500, Juárez</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">12pm – 1am</span></li><li class=""><span class="day">Mar:</span><span class="time">12pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">12pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">12pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">12pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">12pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">12pm – 1am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/fiftymils" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @fiftymils
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Fifty+Mils+Four+Seasons+Reforma+500+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Brujas</p>
+    <p class="bar-tipo">Cocktail bar</p>
+    <p class="bar-address">Río de Janeiro 56, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">5pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">5pm – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/brujasmex" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @brujasmex
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Bar+Las+Brujas+Rio+de+Janeiro+56+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Licorería Limantour</p>
+    <p class="bar-tipo">Cocktail bar</p>
+    <p class="bar-address">Álvaro Obregón 106, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">6pm – 12am</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 12am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 12am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">3pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">3pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">3pm – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/limantourmx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @limantourmx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Licoreria+Limantour+Alvaro+Obregon+106+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Café de Nadie</p>
+    <p class="bar-tipo">Cocktail bar · Listening bar</p>
+    <p class="bar-address">Chihuahua 135, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">4pm – 11pm</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">2pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">2pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">12pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">12pm – 11pm</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/cafe.denadie" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @cafe.denadie
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Cafe+de+Nadie+Chihuahua+135+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Rayo</p>
+    <p class="bar-tipo">Cocktail bar · Agave bar</p>
+    <p class="bar-address">Salamanca 85, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">6pm – 12am</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">6pm – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/rayocdmx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @rayocdmx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Rayo+Bar+Salamanca+85+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Mauro</p>
+    <p class="bar-tipo">Cocktail bar</p>
+    <p class="bar-address">Tabasco 149, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">5pm – 11pm</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">5pm – 11pm</span></li><li class=""><span class="day">Jue:</span><span class="time">5pm – 12am</span></li><li class=""><span class="day">Vie:</span><span class="time">4pm – 12am</span></li><li class=""><span class="day">Sáb:</span><span class="time">4pm – 12am</span></li><li class=""><span class="day">Dom:</span><span class="time">3pm – 10pm</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/barmauromx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @barmauromx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Bar+Mauro+Tabasco+149+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Baltra</p>
+    <p class="bar-tipo">Cocktail bar</p>
+    <p class="bar-address">Iztaccíhuatl 36D, Hipódromo Condesa</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">6pm – 12am</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">6pm – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/baltrabar" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @baltrabar
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Baltra+Bar+Iztaccihuatl+36+Condesa+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Obsidiana / L'Obsidian</p>
+    <p class="bar-tipo">Agave bar · Cocktail bar</p>
+    <p class="bar-address">Sofitel Mexico City Reforma, Reforma 297</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">—</span></li><li class=""><span class="day">Mar:</span><span class="time">—</span></li><li class="today"><span class="day">Mié:</span><span class="time">—</span></li><li class=""><span class="day">Jue:</span><span class="time">—</span></li><li class=""><span class="day">Vie:</span><span class="time">—</span></li><li class=""><span class="day">Sáb:</span><span class="time">—</span></li><li class=""><span class="day">Dom:</span><span class="time">—</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/lobsidianbar" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @lobsidianbar
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Obsidiana+bar+Sofitel+Mexico+City+Reforma" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Artemisia</p>
+    <p class="bar-tipo">Speakeasy · Cocktail bar</p>
+    <p class="bar-address">Tonalá 23, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">6pm – 2am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/maison_artemisia" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @maison_artemisia
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Maison+Artemisia+Tonala+23+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Outline</p>
+    <p class="bar-tipo">Cocktail bar · Restaurant-bar</p>
+    <p class="bar-address">Av. Oaxaca 99, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">11am – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">12:30pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">10am – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">10am – 2am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/outlinecdmx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @outlinecdmx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Outline+bar+Oaxaca+99+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Katz</p>
+    <p class="bar-tipo">Cocktail bar · Snacks</p>
+    <p class="bar-address">Álvaro Obregón 124, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">5pm – 12am</span></li><li class="today"><span class="day">Mié:</span><span class="time">5pm – 12am</span></li><li class=""><span class="day">Jue:</span><span class="time">5pm – 1:30am</span></li><li class=""><span class="day">Vie:</span><span class="time">5pm – 1:30am</span></li><li class=""><span class="day">Sáb:</span><span class="time">5pm – 1:30am</span></li><li class=""><span class="day">Dom:</span><span class="time">6pm – 1am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/katz.mx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @katz.mx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=KATZ+Cocktail+Bar+Alvaro+Obregon+124+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Ladina</p>
+    <p class="bar-tipo">Wine bar · Cocktail bar</p>
+    <p class="bar-address">Colima 333, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">4pm – 12am</span></li><li class=""><span class="day">Mar:</span><span class="time">4pm – 12am</span></li><li class="today"><span class="day">Mié:</span><span class="time">4pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">4pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">4pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">10am – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">10am – 2am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/ladinabar" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @ladinabar
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Ladina+Bar+Colima+333+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Tacobar</p>
+    <p class="bar-tipo">Taco bar · Casual drinks</p>
+    <p class="bar-address">Oaxaca 12 / Campeche 122, Roma</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">3pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">3pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">3pm – 1am</span></li><li class=""><span class="day">Vie:</span><span class="time">3pm – 1am</span></li><li class=""><span class="day">Sáb:</span><span class="time">3pm – 1am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/cafetacobar" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @cafetacobar
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Cafe+Tacobar+Oaxaca+12+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Salón Palomilla</p>
+    <p class="bar-tipo">Bar · Cantina cool</p>
+    <p class="bar-address">Av. Yucatán 83, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">—</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 12am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">6pm – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/salon_palomilla" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @salon_palomilla
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Salon+Palomilla+Yucatan+83+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Básico</p>
+    <p class="bar-tipo">Bar · Casual drinks</p>
+    <p class="bar-address">Tepic 21, Roma Sur</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">4pm – 11pm</span></li><li class="today"><span class="day">Mié:</span><span class="time">4pm – 11pm</span></li><li class=""><span class="day">Jue:</span><span class="time">4pm – 1am</span></li><li class=""><span class="day">Vie:</span><span class="time">4pm – 1am</span></li><li class=""><span class="day">Sáb:</span><span class="time">4pm – 1am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/bar_basico" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @bar_basico
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Bar+Basico+Tepic+21+Roma+Sur+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Bar Félix</p>
+    <p class="bar-tipo">Bar · Restaurant-bar</p>
+    <p class="bar-address">Álvaro Obregón 64, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">4pm – 2am</span></li><li class=""><span class="day">Mar:</span><span class="time">4pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">4pm – 2:30am</span></li><li class=""><span class="day">Jue:</span><span class="time">4pm – 3am</span></li><li class=""><span class="day">Vie:</span><span class="time">4pm – 3am</span></li><li class=""><span class="day">Sáb:</span><span class="time">2pm – 3am</span></li><li class=""><span class="day">Dom:</span><span class="time">2pm – 2am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/_barfelix" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @_barfelix
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Bar+Felix+Alvaro+Obregon+64+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Rosso Speakeasy</p>
+    <p class="bar-tipo">Speakeasy · Cocktail bar</p>
+    <p class="bar-address">Puebla 329, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">4pm – 11pm</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/rosso.speakeasy" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @rosso.speakeasy
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Rosso+Speakeasy+Puebla+329+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Owl Bar</p>
+    <p class="bar-tipo">Cocktail bar · Casual bar</p>
+    <p class="bar-address">Atlixco 94, Condesa</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/owlbar_mx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @owlbar_mx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Owl+Bar+Atlixco+94+Condesa+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Antesala</p>
+    <p class="bar-tipo">Cocktail bar</p>
+    <p class="bar-address">Sinaloa 141, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 12am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 12am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/antesala.cdmx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @antesala.cdmx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Antesala+Bar+Sinaloa+141+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">RO Upstairs</p>
+    <p class="bar-tipo">Cocktail bar</p>
+    <p class="bar-address">Anatole France 71B, Polanco</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 12am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 12am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/ro.upstairs" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @ro.upstairs
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Ro+Upstairs+Anatole+France+71+Polanco+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Librería Valladolid</p>
+    <p class="bar-tipo">Cocktail bar · Biblioteca</p>
+    <p class="bar-address">Tabasco 321, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">5pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">3pm – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/libreriavalladolid" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @libreriavalladolid
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Libreria+Valladolid+Tabasco+321+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Librería Castelar</p>
+    <p class="bar-tipo">Cocktail bar · Biblioteca</p>
+    <p class="bar-address">Emilio Castelar 135, Polanco</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Mar:</span><span class="time">5pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">5pm – 12am</span></li><li class=""><span class="day">Sáb:</span><span class="time">5pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">5pm – 2am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/libreriacastelarpolanco" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @libreriacastelarpolanco
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Libreria+Castelar+Emilio+Castelar+135+Polanco+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div></div>
+</section>
+
+<!-- AGAVE -->
+<section class="section-block" id="agave">
+  <div class="section-header"><span class="section-label">II</span><div class="section-line"></div></div>
+  <h2 class="section-title">Agave &amp; Mezcal</h2>
+  <div class="bar-grid" id="grid-agave"><div class="bar-card">
+    <p class="bar-name">Tlecān</p>
+    <p class="bar-tipo">Agave bar · Cocktail bar</p>
+    <p class="bar-address">Álvaro Obregón 228, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">6pm – 2am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/tlecan" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @tlecan
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Tlecan+Alvaro+Obregon+228+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Bósforo</p>
+    <p class="bar-tipo">Mezcalería</p>
+    <p class="bar-address">Luis Moya 31, Centro Histórico</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 1:30am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 1:30am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2:30am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2:30am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2:30am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/bosforomezcaleria" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @bosforomezcaleria
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Bosforo+mezcaleria+Luis+Moya+31+Centro+Historico+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">La Clandestina</p>
+    <p class="bar-tipo">Mezcalería</p>
+    <p class="bar-address">Álvaro Obregón 298, Condesa</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">6:30pm – 1am</span></li><li class=""><span class="day">Mar:</span><span class="time">6:30pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6:30pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">6:30pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6:30pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6:30pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/laclandestinamezcaleria" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @laclandestinamezcaleria
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=La+Clandestina+mezcaleria+Alvaro+Obregon+298+Condesa+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">La Lavandería</p>
+    <p class="bar-tipo">Mezcalería · Agave bar</p>
+    <p class="bar-address">Álvaro Obregón 298-B, Hipódromo</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/lalavanderiamx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @lalavanderiamx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=La+Lavanderia+Nocturna+Alvaro+Obregon+298+Hipodromo+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Despacho Margarita</p>
+    <p class="bar-tipo">Margarita bar · Agave bar</p>
+    <p class="bar-address">Córdoba 115, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">11am – 12am</span></li><li class=""><span class="day">Mar:</span><span class="time">11am – 12am</span></li><li class="today"><span class="day">Mié:</span><span class="time">11am – 12am</span></li><li class=""><span class="day">Jue:</span><span class="time">11am – 12am</span></li><li class=""><span class="day">Vie:</span><span class="time">11am – 12am</span></li><li class=""><span class="day">Sáb:</span><span class="time">11am – 12am</span></li><li class=""><span class="day">Dom:</span><span class="time">11am – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/despachomargarita" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @despachomargarita
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Despacho+Margarita+Cordoba+115+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Barra Lupe</p>
+    <p class="bar-tipo">Cantina · Agave bar</p>
+    <p class="bar-address">Orizaba 154, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">1pm – 11:30pm</span></li><li class=""><span class="day">Mar:</span><span class="time">1pm – 11:30pm</span></li><li class="today"><span class="day">Mié:</span><span class="time">1pm – 11:30pm</span></li><li class=""><span class="day">Jue:</span><span class="time">1pm – 1am</span></li><li class=""><span class="day">Vie:</span><span class="time">1pm – 1am</span></li><li class=""><span class="day">Sáb:</span><span class="time">1pm – 1am</span></li><li class=""><span class="day">Dom:</span><span class="time">1pm – 11:30pm</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/barralupemx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @barralupemx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Barra+Lupe+Orizaba+154+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div></div>
+</section>
+
+<!-- MUSIC -->
+<section class="section-block" id="musica">
+  <div class="section-header"><span class="section-label">III</span><div class="section-line"></div></div>
+  <h2 class="section-title">Listening Bars &amp; Música</h2>
+  <div class="bar-grid" id="grid-musica"><div class="bar-card">
+    <p class="bar-name">Parker &amp; Lenox</p>
+    <p class="bar-tipo">Jazz bar · Cocktail bar</p>
+    <p class="bar-address">General Prim 100, Juárez</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/parkerandlenox" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @parkerandlenox
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Parker+Lenox+General+Prim+100+Juarez+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Tokyo Music Bar</p>
+    <p class="bar-tipo">Listening bar · Cocktail bar</p>
+    <p class="bar-address">Río Pánuco 132, Cuauhtémoc</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Mar:</span><span class="time">7pm – 2am</span></li><li class="today"><span class="day">Mié:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Jue:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">7pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">7am – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/tokyomusicbar" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @tokyomusicbar
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Tokyo+Music+Bar+Rio+Panuco+132+Cuauhtemoc+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Shhh</p>
+    <p class="bar-tipo">Listening bar · Cocktail bar</p>
+    <p class="bar-address">Av. Ámsterdam 62, Hipódromo</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 12am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">4pm – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">4pm – 12am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/shhh99r" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @shhh99r
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Shhh+bar+Amsterdam+62+Hipodromo+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Jazzatlán Capital</p>
+    <p class="bar-tipo">Jazz club · Live music</p>
+    <p class="bar-address">Guanajuato 239, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Mar:</span><span class="time">6pm – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 1am</span></li><li class=""><span class="day">Sáb:</span><span class="time">5:30pm – 1am</span></li><li class=""><span class="day">Dom:</span><span class="time">5:30pm – 1am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/jazzatlancapital" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @jazzatlancapital
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Jazzatlan+Capital+Guanajuato+239+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Zinco Jazz Club</p>
+    <p class="bar-tipo">Jazz club</p>
+    <p class="bar-address">Motolinía 20, Centro Histórico</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">9pm – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">9pm – 1am</span></li><li class=""><span class="day">Vie:</span><span class="time">9pm – 1am</span></li><li class=""><span class="day">Sáb:</span><span class="time">9pm – 1am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/zincojazzclub" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @zincojazzclub
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Zinco+Jazz+Club+Motolinia+20+Centro+Historico+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div></div>
+</section>
+
+<!-- ROOFTOP -->
+<section class="section-block" id="rooftop">
+  <div class="section-header"><span class="section-label">IV</span><div class="section-line"></div></div>
+  <h2 class="section-title">Rooftops &amp; Vistas</h2>
+  <div class="bar-grid" id="grid-rooftop"><div class="bar-card">
+    <p class="bar-name">Cityzen Bar</p>
+    <p class="bar-tipo">Rooftop bar</p>
+    <p class="bar-address">Sofitel Mexico City Reforma, Reforma 297</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">8am – 1am</span></li><li class=""><span class="day">Mar:</span><span class="time">8am – 1am</span></li><li class="today"><span class="day">Mié:</span><span class="time">8am – 1am</span></li><li class=""><span class="day">Jue:</span><span class="time">8am – 2am</span></li><li class=""><span class="day">Vie:</span><span class="time">8am – 2am</span></li><li class=""><span class="day">Sáb:</span><span class="time">8am – 2am</span></li><li class=""><span class="day">Dom:</span><span class="time">8am – 1am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/cityzenmexico" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @cityzenmexico
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Cityzen+Bar+Sofitel+Mexico+City+Reforma" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div></div>
+</section>
+
+<!-- LATE NIGHT -->
+<section class="section-block" id="noche">
+  <div class="section-header"><span class="section-label">V</span><div class="section-line"></div></div>
+  <h2 class="section-title">Party &amp; Late Night</h2>
+  <div class="bar-grid" id="grid-noche"><div class="bar-card">
+    <p class="bar-name">Departamento</p>
+    <p class="bar-tipo">Club · Music bar</p>
+    <p class="bar-address">Álvaro Obregón 154, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">6pm – 3am</span></li><li class=""><span class="day">Jue:</span><span class="time">6pm – 3am</span></li><li class=""><span class="day">Vie:</span><span class="time">6pm – 4am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 4am</span></li><li class=""><span class="day">Dom:</span><span class="time">6pm – 3am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/departamento_studiobar" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @departamento_studiobar
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Departamento+studio+bar+Alvaro+Obregon+154+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Bar Oriente</p>
+    <p class="bar-tipo">Club · Electronic music</p>
+    <p class="bar-address">Durango 181, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">10pm – 5am</span></li><li class=""><span class="day">Jue:</span><span class="time">10pm – 5am</span></li><li class=""><span class="day">Vie:</span><span class="time">10pm – 5am</span></li><li class=""><span class="day">Sáb:</span><span class="time">10pm – 5am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/bar_oriente" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @bar_oriente
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Bar+Oriente+Durango+181+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Café Paraíso</p>
+    <p class="bar-tipo">Bar · Club tropical</p>
+    <p class="bar-address">Plaza Villa de Madrid 17, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Jue:</span><span class="time">12am – 4am</span></li><li class=""><span class="day">Vie:</span><span class="time">12am – 5am</span></li><li class=""><span class="day">Sáb:</span><span class="time">12am – 5am</span></li><li class=""><span class="day">Dom:</span><span class="time">12am – 5am</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/cafeparaisomx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @cafeparaisomx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Cafe+Paraiso+Plaza+Villa+de+Madrid+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Jardín Paraíso</p>
+    <p class="bar-tipo">Bar · Terraza · Party spot</p>
+    <p class="bar-address">Querétaro 202, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Mar:</span><span class="time">Cerrado</span></li><li class="today"><span class="day">Mié:</span><span class="time">Cerrado</span></li><li class=""><span class="day">Jue:</span><span class="time">7pm – 12am</span></li><li class=""><span class="day">Vie:</span><span class="time">7pm – 12am</span></li><li class=""><span class="day">Sáb:</span><span class="time">6pm – 12am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/_jardinmx" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @_jardinmx
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Jardin+Paraiso+Queretaro+202+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div><div class="bar-card">
+    <p class="bar-name">Salón San Luis</p>
+    <p class="bar-tipo">Salsa club · Dance hall</p>
+    <p class="bar-address">San Luis Potosí 28, Roma Norte</p>
+    <div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"></polyline></svg>
+      Horarios
+    </button>
+    <ul class="hours-list"><li class=""><span class="day">Lun:</span><span class="time">8pm – 4am</span></li><li class=""><span class="day">Mar:</span><span class="time">8pm – 4am</span></li><li class="today"><span class="day">Mié:</span><span class="time">8pm – 4am</span></li><li class=""><span class="day">Jue:</span><span class="time">8pm – 4am</span></li><li class=""><span class="day">Vie:</span><span class="time">8pm – 4am</span></li><li class=""><span class="day">Sáb:</span><span class="time">8pm – 4am</span></li><li class=""><span class="day">Dom:</span><span class="time">Cerrado</span></li></ul></div>
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/sanluisclubroma" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        @sanluisclubroma
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="https://maps.google.com/?q=Club+San+Luis+San+Luis+Potosi+28+Roma+Norte+CDMX" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        Maps
+      </a>
+    </div></div></div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer-block">
+  <p class="footer-label">Escanea para compartir esta guía</p>
+  <div id="qr-container" title="file:///C:/Users/midor/Downloads/handshake-cdmx-guide_3.html"><canvas width="140" height="140" style="display: none;"></canvas><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMCAYAAACuwEE+AAAKT0lEQVR4AeycPZYjxxGE8dbcI8iRq/ufRq5kyJGjG1AT+7bAr4PdmVXTwAADBN8mO7IiMqsQyNe15P78+Pnz5x9fEf/777//YKzsyTrhqlZ8FVWtONYqXwnWdnilr2u9t/P3zH9c8k8cWHAgA7NgVqSXy2Zg/vOvf15uFZ251T5d7Qr/t7//48LwWj/HitZ7sbbDvq/3cp65az2n9iz23puBcTJ5HHAHMjDuSPLSgQxMaU9Id6AcmO4eJu+Nb5lrH0bVmzph1/qdLg3Deebey3NqHbu2y3mmTtvx7NXhrlc5MF1x+PdzIAPzft/5qU+cgTll3/sVP2xg/C5dsX7l5weu9X0rvjuT11Z613bnqHo9knvYwDzyQ2fvzzuQgfm8d29ZmYG59df+4v2+5cB09z9/vtBpnT/zfXsv5t6XZxSmVph65QxyX42/5cB8tUnZ708HMjB/ehE04UA5MHpVzsbEXqWEr9xuz6oR+whX2j2Oe6uesafnGmsds88edn2Vc88ZXPVyrutXDkxXHP79HMjAvN93fuoTZ2BO2fediz939s3A7N2tn11bPQ7vUt9ztRf17CvsvbXGIM91YXLC3EdYawytHYX6MVgnzDrlDHJ7mNqz2PtvBsbJ5HHAHcjAuCPJSwcyMKU9Id2BH7xH74l945Xc7+GV2lUtPej2dZ61wuRXz7Gi115fFXnDrHwz0W7/IFv8iAOdAw94w3RHCv/MDvw4c89WteT2sJtCzep9zFrveyb3c3ivVZ761V7U8/Oexey7h71/3jB7LmXt0IEMzKE1IfYcyMDsuZK1QweWBsbvszN3MmuFeULfp8tVP4J99vDQjadrqr1GzXh2teS9Lzlh55mLZ4z9Z5+sXcW+x9LArG4W/es5kIE5/k7D7DiwGRi+BoV39JslaWZjU/iReN3H0vWHvwY9vwp3gGurfVTuPOvFrwRrhdnb+5ATdr7KpWe4lpywzjKi0zrv+WZgnEweB9yBDIw7krx0IANT2hPSHTg1MONevPVT9y7DD30mZ19h76W1ERU3NHy6nnnnEbUd9l48g3DFO9ft5fypgfFmyV/fgQzMC3zHX/kRMjBf6fYL7LUZmO5+c1735Qj3YqyP5wpf7aN+zntv5q71nFph55mLr0JnY7CW68Leh1ph51dy9Wes1HbazcB04vBxIAOTGVhyIAOzZFfESwPDe1GY9iln6B5mUHtPzDPMYJ5RmDWr51Q9g/VcFyYnzH2FtXYU4hnqVwX7sE6Y3AxeGpiZhtG8tgOnBua1rcmn23OgHBi9shizrz1txDphrVUhzVH4vkc6rVd7iOt6kZe+CmqFXavzHIVrq1y9q/Ba39P5M3k5MGcap/Y1HcjAvOb3erdPlYG5m7Wv2XjztzesfkTeldUdK857a+0oXMt9hI/qZtZVz+j2otb7d7XUu9ZzaoWdZ84zCZPrsHozOr36M/KG6RwLv3HgPQZm85GTnHEgA3PGvTes3fztDbyrhM/4ofoqqt68Y/fwSl/X7vXjWnWuVY57ey25PbxyJq/3vVZ6ea3necO4I8lLBzIwpT0h3YEMjDuSvHSgHBjefcJlJyOlZxh9qe7dilMf9nXstR1f6bUXw7We+14rOfcR9t7MV/pKy1rH2qsK1TPKgakahbuHA8/fMwPz/N/RU50wA/NUX8fzH2YzMLyrhM8c3+9K9WNUvakTdq33Ji89g9weplaYvZUzvJ6csPP3ynnGGayzHcXqGTcDs1oc/fs5kIF5v+/81CcuB8Zfdys7+SvQe3U89b6v15JnnTA5Ya+VhkFeegY5YdbtYdY6T24Pq/9R7Olvtebn9LwcmFsdIn1ex4HfA/M6Hyif5L4OZGDu6+/LdT/1WzTpht91nlMr7PzRfa1113qufkexovUeZ2rVi/XKq9DnZFS11AlXfZ1jX2HnuzxvmM6h8BsHMjAbO5J0DmRgOofCbxwoB0b3I2NT2SSsE3a51hjkdbcyqNvDrHWenDD7CmuNobURXS/nPWffDo89x5P6sTae5IS7fUedntIzvLbLy4Fh4yfBOcaDHcjAPPgL+G7bZ2C+2zf24PNu/piJn0V3HsP56r5jnbBrtcZgb9eSE2adsNZGKGeM9fH03p4P3cyT++xh9vB9XE+tY691fiX3Xivn0D55w8iFxLQDGZhpqyKUAxkYuZCYdmDp15L8vqtyvyv9RB3v+irnObq+1Ap7X9Y7Jz3DedY6dq3nrmfOPYW9diVXPWOlVtq8YeRCYtqBDMy0VRHKgfI/qyVg8DXZYb72hNlHWGsMrR0FdcKu41nEM8gJe22Vs4+wa9WP4fytcu4hrLNUIc1RdGfyvq7PG8YdSV46kIEp7QnpDmRg3JHkpQNLA9Pdb9zJ71Bywh0vzWzwXF3fjmcv399rqd3DrHd+pRf7fAZzb9/3Yg07fmlgrHfSN3QgA/OGX/qZj5yBOePeG9Yu/dJAdb/xntzD7q1rnGde7Ssdee/rufSMjqe2wzyHMHuv1lZ69Wa4lvsKk1fOIDeD84aZcSmaqwMZmKsVATMOZGBmXIrm6kA5MLwnhXn3CV+7fADxVUjPuHzU8Ae5DrNOmHo/g3gGtcLkhFmvnCE9g5wwOWGtjWBf4bE+ntIzpBnBdeFRM/scffTsatSf4fpyYFycPA5kYDIDSw5sfnsDX0XC3kmvNAZ56atgnTBrhbU2QjljrM88WSfc1UhzFF57pDtaZ/2RZqxTKzzW957u856Ga9SrN4O6GZw3zIxL0VwdyMBcrQiYcSADM+NSNFcHNr80wLtN+KqaANJXMdHiKvE+V+I34J18Fnd7XS6/N/14dFrnebaP8s0Pch3eFH4kvk+Xf5RM//BeXpg3jDuSvHQgA1PaE9IdyMC4I8lLB8r/D9PdrSt8eYqG9H26e7Zpt6G994a0xLUr5+hqvRdzO8ZfUu/9FwEWXMt9hJ1H6S+YN8wvG/KvWQcyMLNORffLgQzMLxte4l9f8iE2A6M77FbRnd736fTkq3v2TF/twd7KGV1v1gpTzz57WHrGnuZojfsIH+n21rmnsOoZXrMZGCeTxwF3IAPjjiQvHcjAlPaEdAfKgdGdNhveuMurvl7LO1W44r1vpVUvD+q7XtTuYdY7T07Y+SqXfiXYq/q80nV9y4FRg0QcoAMZGLoR3Dpwi4FpN9kTdK9G1vhrklyHfZ+uF/Xe22s9Z22Hvbfr2ds5r+1y1rOv8Eqt+jxsYLqDhn9OBzIwz/m9PO2pMjBP+9U858GeZmB0P47Q3cpYsW70GM+VWteOHuO5yrue+eg5nvy8wmNdT+UMra1EtS+5Gfw0AzNz2Gge70AG5vHfwbc6wVsNzLf6Zp70sOXAfPaevPdn9XOt7Oe1/LmBY+/b1bqe+Wpv1vq+5IS9d5VLfybKgTnTOLWv6UAG5jW/17t9qgzM3ax9zcabganuvlWus8v7Ud/d2dQKs5dyBjlhcnuYe0tfhdevaL12Jfd9eOYOr+wjre+1GRgJEnGgciADU7nzKO6J983APPGX84xH+z8AAAD//x5kGTsAAAAGSURBVAMAKwQ9nrsHHXAAAAAASUVORK5CYII=" style="display: block;"></div>
+  <p class="footer-copy">La Ciudad de México, vista desde la barra.</p>
+  <p class="footer-sig">Handshake Speakeasy &nbsp;·&nbsp; #1 World's 50 Best Bars 2024 &nbsp;·&nbsp; Ciudad de México</p>
+</div>
+
+</main>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+// hours: array of 7 strings, Mon–Sun
+const BARS = [
+  // ── COCKTAIL ──
+  { name:"Long Story Short", tipo:"Cocktail bar", addr:"Londres 178, Juárez", ig:"longstoryshortcdmx",
+    gmaps:"https://maps.google.com/?q=Long+Story+Short+Bar+Juarez+CDMX",
+    lat:19.4242039, lng:-99.1664242, cat:"cocktail",
+    hours:["Lun: 5pm – 1am","Mar: 5pm – 1am","Mié: 5pm – 2am","Jue: 5pm – 2am","Vie: 5pm – 2am","Sáb: 5pm – 2am","Dom: Cerrado"] },
+  { name:"FO+MA / Form + Matter", tipo:"Cocktail bar", addr:"San Luis Potosí 37, Roma Norte", ig:"fomabar.mx",
+    gmaps:"https://maps.google.com/?q=FORM+MATTER+San+Luis+Potosi+37+Roma+Norte+CDMX",
+    lat:19.4148111, lng:-99.1565436, cat:"cocktail",
+    hours:["Lun: 7pm – 1am","Mar: 6pm – 1am","Mié: Cerrado","Jue: 6pm – 1am","Vie: 6pm – 1:30am","Sáb: 6pm – 1:30am","Dom: 6pm – 1am"] },
+  { name:"King Cole Bar", tipo:"Hotel bar · Cocktail bar", addr:"St. Regis, Reforma 439, 3er piso", ig:"stregismexicocity",
+    gmaps:"https://maps.google.com/?q=King+Cole+Bar+St+Regis+Mexico+City",
+    lat:19.425627, lng:-99.172356, cat:"cocktail",
+    hours:["Lun: 11am – 2am","Mar: 11am – 2am","Mié: 11am – 2am","Jue: 11am – 2am","Vie: 11am – 2am","Sáb: 11am – 2am","Dom: 11am – 1am"] },
+  { name:"Ahorita Cantina", tipo:"Cantina · Cocktail bar", addr:"Reforma 390, Plaza Alma, 1er piso, Juárez", ig:"ahoritacantina",
+    gmaps:"https://maps.google.com/?q=Ahorita+Cantina+Reforma+390+Juarez+CDMX",
+    lat:19.4254832, lng:-99.1696632, cat:"cocktail",
+    hours:["Lun: 6pm – 2am","Mar: Cerrado","Mié: Cerrado","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: 6pm – 2am"] },
+  { name:"Chow Chow", tipo:"Cocktail bar · Comida china", addr:"Av. Chapultepec 403, Juárez", ig:"chowchowh",
+    gmaps:"https://maps.google.com/?q=Chow+Chow+House+Chapultepec+403+Juarez+CDMX",
+    lat:19.4228804, lng:-99.1677812, cat:"cocktail",
+    hours:["Lun: 7pm – 2am","Mar: 7pm – 2am","Mié: 7pm – 2am","Jue: 7pm – 2am","Vie: 7pm – 2am","Sáb: 7pm – 2am","Dom: 7pm – 2am"] },
+  { name:"Kaito", tipo:"Cocktail bar · Comida japonesa", addr:"Hamburgo 70B, Juárez", ig:"kaitodelvalle",
+    gmaps:"https://maps.google.com/?q=Kaito+del+Valle+Hamburgo+70+Juarez+CDMX",
+    lat:19.4271917, lng:-99.1625031, cat:"cocktail",
+    hours:["Lun: 5pm – 1am","Mar: 5pm – 1am","Mié: 5pm – 1am","Jue: 12:30pm – 2am","Vie: 12:30pm – 2am","Sáb: 12:30pm – 2am","Dom: 12:30pm – 1am"] },
+  { name:"Xaman", tipo:"Speakeasy · Cocktail bar", addr:"Copenhague 6, Juárez", ig:"xamanbar",
+    gmaps:"https://maps.google.com/?q=Xaman+Bar+Copenhague+6+Juarez+CDMX",
+    lat:19.4278009, lng:-99.1638473, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: Cerrado","Mié: 7pm – 1am","Jue: 7pm – 2am","Vie: 7pm – 2am","Sáb: 7pm – 2am","Dom: Cerrado"] },
+  { name:"Hanky Panky", tipo:"Speakeasy · Cocktail bar", addr:"Turín 52, Juárez", ig:"hankypankydf",
+    gmaps:"https://maps.google.com/?q=Hanky+Panky+Cocktail+Bar+Turin+52+Juarez+CDMX",
+    lat:19.427017, lng:-99.1556652, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 5pm – 2am","Mié: 5pm – 2am","Jue: 5pm – 2am","Vie: 5pm – 2am","Sáb: 5pm – 2am","Dom: 5pm – 12am"] },
+  { name:"Fifty Mils", tipo:"Hotel bar · Cocktail bar", addr:"Four Seasons, Reforma 500, Juárez", ig:"fiftymils",
+    gmaps:"https://maps.google.com/?q=Fifty+Mils+Four+Seasons+Reforma+500+CDMX",
+    lat:19.4232368, lng:-99.1743556, cat:"cocktail",
+    hours:["Lun: 12pm – 1am","Mar: 12pm – 1am","Mié: 12pm – 1am","Jue: 12pm – 2am","Vie: 12pm – 2am","Sáb: 12pm – 2am","Dom: 12pm – 1am"] },
+  { name:"Brujas", tipo:"Cocktail bar", addr:"Río de Janeiro 56, Roma Norte", ig:"brujasmex",
+    gmaps:"https://maps.google.com/?q=Bar+Las+Brujas+Rio+de+Janeiro+56+Roma+Norte+CDMX",
+    lat:19.4211829, lng:-99.1597732, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 5pm – 2am","Mié: 5pm – 2am","Jue: 5pm – 2am","Vie: 5pm – 2am","Sáb: 5pm – 2am","Dom: 5pm – 12am"] },
+  { name:"Licorería Limantour", tipo:"Cocktail bar", addr:"Álvaro Obregón 106, Roma Norte", ig:"limantourmx",
+    gmaps:"https://maps.google.com/?q=Licoreria+Limantour+Alvaro+Obregon+106+Roma+Norte+CDMX",
+    lat:19.4180939, lng:-99.1593559, cat:"cocktail",
+    hours:["Lun: 6pm – 12am","Mar: 6pm – 12am","Mié: 6pm – 12am","Jue: 6pm – 2am","Vie: 3pm – 2am","Sáb: 3pm – 2am","Dom: 3pm – 12am"] },
+  { name:"Café de Nadie", tipo:"Cocktail bar · Listening bar", addr:"Chihuahua 135, Roma Norte", ig:"cafe.denadie",
+    gmaps:"https://maps.google.com/?q=Cafe+de+Nadie+Chihuahua+135+Roma+Norte+CDMX",
+    lat:19.417402, lng:-99.1605353, cat:"cocktail",
+    hours:["Lun: 4pm – 11pm","Mar: Cerrado","Mié: 6pm – 2am","Jue: 2pm – 2am","Vie: 2pm – 2am","Sáb: 12pm – 2am","Dom: 12pm – 11pm"] },
+  { name:"Rayo", tipo:"Cocktail bar · Agave bar", addr:"Salamanca 85, Roma Norte", ig:"rayocdmx",
+    gmaps:"https://maps.google.com/?q=Rayo+Bar+Salamanca+85+Roma+Norte+CDMX",
+    lat:19.4182516, lng:-99.1694912, cat:"cocktail",
+    hours:["Lun: 6pm – 12am","Mar: Cerrado","Mié: 6pm – 2am","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: 6pm – 12am"] },
+  { name:"Mauro", tipo:"Cocktail bar", addr:"Tabasco 149, Roma Norte", ig:"barmauromx",
+    gmaps:"https://maps.google.com/?q=Bar+Mauro+Tabasco+149+Roma+Norte+CDMX",
+    lat:19.419464, lng:-99.1593451, cat:"cocktail",
+    hours:["Lun: 5pm – 11pm","Mar: Cerrado","Mié: 5pm – 11pm","Jue: 5pm – 12am","Vie: 4pm – 12am","Sáb: 4pm – 12am","Dom: 3pm – 10pm"] },
+  { name:"Baltra", tipo:"Cocktail bar", addr:"Iztaccíhuatl 36D, Hipódromo Condesa", ig:"baltrabar",
+    gmaps:"https://maps.google.com/?q=Baltra+Bar+Iztaccihuatl+36+Condesa+CDMX",
+    lat:19.4094971, lng:-99.16887, cat:"cocktail",
+    hours:["Lun: 6pm – 12am","Mar: 6pm – 1am","Mié: 6pm – 1am","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: 6pm – 12am"] },
+  { name:"Obsidiana / L'Obsidian", tipo:"Agave bar · Cocktail bar", addr:"Sofitel Mexico City Reforma, Reforma 297", ig:"lobsidianbar",
+    gmaps:"https://maps.google.com/?q=Obsidiana+bar+Sofitel+Mexico+City+Reforma",
+    lat:19.4284387, lng:-99.1663194, cat:"cocktail",
+    hours:["Lun: —","Mar: —","Mié: —","Jue: —","Vie: —","Sáb: —","Dom: —"] },
+  { name:"Artemisia", tipo:"Speakeasy · Cocktail bar", addr:"Tonalá 23, Roma Norte", ig:"maison_artemisia",
+    gmaps:"https://maps.google.com/?q=Maison+Artemisia+Tonala+23+Roma+Norte+CDMX",
+    lat:19.4207265, lng:-99.1634259, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 6pm – 2am","Mié: 6pm – 2am","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: 6pm – 2am"] },
+  { name:"Outline", tipo:"Cocktail bar · Restaurant-bar", addr:"Av. Oaxaca 99, Roma Norte", ig:"outlinecdmx",
+    gmaps:"https://maps.google.com/?q=Outline+bar+Oaxaca+99+Roma+Norte+CDMX",
+    lat:19.4187152, lng:-99.1677788, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: Cerrado","Mié: 5pm – 2am","Jue: 11am – 2am","Vie: 12:30pm – 2am","Sáb: 10am – 2am","Dom: 10am – 2am"] },
+  { name:"Katz", tipo:"Cocktail bar · Snacks", addr:"Álvaro Obregón 124, Roma Norte", ig:"katz.mx",
+    gmaps:"https://maps.google.com/?q=KATZ+Cocktail+Bar+Alvaro+Obregon+124+Roma+Norte+CDMX",
+    lat:19.4178485, lng:-99.1603398, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 5pm – 12am","Mié: 5pm – 12am","Jue: 5pm – 1:30am","Vie: 5pm – 1:30am","Sáb: 5pm – 1:30am","Dom: 6pm – 1am"] },
+  { name:"Ladina", tipo:"Wine bar · Cocktail bar", addr:"Colima 333, Roma Norte", ig:"ladinabar",
+    gmaps:"https://maps.google.com/?q=Ladina+Bar+Colima+333+Roma+Norte+CDMX",
+    lat:19.4183836, lng:-99.1671654, cat:"cocktail",
+    hours:["Lun: 4pm – 12am","Mar: 4pm – 12am","Mié: 4pm – 2am","Jue: 4pm – 2am","Vie: 4pm – 2am","Sáb: 10am – 2am","Dom: 10am – 2am"] },
+  { name:"Tacobar", tipo:"Taco bar · Casual drinks", addr:"Oaxaca 12 / Campeche 122, Roma", ig:"cafetacobar",
+    gmaps:"https://maps.google.com/?q=Cafe+Tacobar+Oaxaca+12+Roma+Norte+CDMX",
+    lat:19.4225785, lng:-99.1637941, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 3pm – 1am","Mié: 3pm – 1am","Jue: 3pm – 1am","Vie: 3pm – 1am","Sáb: 3pm – 1am","Dom: Cerrado"] },
+  { name:"Salón Palomilla", tipo:"Bar · Cantina cool", addr:"Av. Yucatán 83, Roma Norte", ig:"salon_palomilla",
+    gmaps:"https://maps.google.com/?q=Salon+Palomilla+Yucatan+83+Roma+Norte+CDMX",
+    lat:19.414152, lng:-99.1625492, cat:"cocktail",
+    hours:["Lun: —","Mar: 6pm – 12am","Mié: 6pm – 2am","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: 6pm – 12am"] },
+  { name:"Básico", tipo:"Bar · Casual drinks", addr:"Tepic 21, Roma Sur", ig:"bar_basico",
+    gmaps:"https://maps.google.com/?q=Bar+Basico+Tepic+21+Roma+Sur+CDMX",
+    lat:19.4072446, lng:-99.1611379, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 4pm – 11pm","Mié: 4pm – 11pm","Jue: 4pm – 1am","Vie: 4pm – 1am","Sáb: 4pm – 1am","Dom: Cerrado"] },
+  { name:"Bar Félix", tipo:"Bar · Restaurant-bar", addr:"Álvaro Obregón 64, Roma Norte", ig:"_barfelix",
+    gmaps:"https://maps.google.com/?q=Bar+Felix+Alvaro+Obregon+64+Roma+Norte+CDMX",
+    lat:19.4183085, lng:-99.1576152, cat:"cocktail",
+    hours:["Lun: 4pm – 2am","Mar: 4pm – 2am","Mié: 4pm – 2:30am","Jue: 4pm – 3am","Vie: 4pm – 3am","Sáb: 2pm – 3am","Dom: 2pm – 2am"] },
+  { name:"Rosso Speakeasy", tipo:"Speakeasy · Cocktail bar", addr:"Puebla 329, Roma Norte", ig:"rosso.speakeasy",
+    gmaps:"https://maps.google.com/?q=Rosso+Speakeasy+Puebla+329+Roma+Norte+CDMX",
+    lat:19.4207986, lng:-99.1716552, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 6pm – 2am","Mié: 6pm – 2am","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: 4pm – 11pm"] },
+  { name:"Owl Bar", tipo:"Cocktail bar · Casual bar", addr:"Atlixco 94, Condesa", ig:"owlbar_mx",
+    gmaps:"https://maps.google.com/?q=Owl+Bar+Atlixco+94+Condesa+CDMX",
+    lat:19.4117514, lng:-99.1748872, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 6pm – 2am","Mié: 6pm – 2am","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: Cerrado"] },
+  { name:"Antesala", tipo:"Cocktail bar", addr:"Sinaloa 141, Roma Norte", ig:"antesala.cdmx",
+    gmaps:"https://maps.google.com/?q=Antesala+Bar+Sinaloa+141+Roma+Norte+CDMX",
+    lat:19.4202542, lng:-99.1701144, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 6pm – 12am","Mié: 6pm – 12am","Jue: 6pm – 1am","Vie: 6pm – 1am","Sáb: 6pm – 1am","Dom: Cerrado"] },
+  { name:"RO Upstairs", tipo:"Cocktail bar", addr:"Anatole France 71B, Polanco", ig:"ro.upstairs",
+    gmaps:"https://maps.google.com/?q=Ro+Upstairs+Anatole+France+71+Polanco+CDMX",
+    lat:19.4302971, lng:-99.1976736, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 6pm – 12am","Mié: 6pm – 12am","Jue: 6pm – 1am","Vie: 6pm – 1am","Sáb: 6pm – 1am","Dom: Cerrado"] },
+  { name:"Librería Valladolid", tipo:"Cocktail bar · Biblioteca", addr:"Tabasco 321, Roma Norte", ig:"libreriavalladolid",
+    gmaps:"https://maps.google.com/?q=Libreria+Valladolid+Tabasco+321+Roma+Norte+CDMX",
+    lat:19.4176272, lng:-99.167492, cat:"cocktail",
+    hours:["Lun: Cerrado","Mar: 5pm – 2am","Mié: 5pm – 2am","Jue: 5pm – 2am","Vie: 5pm – 2am","Sáb: 5pm – 2am","Dom: 3pm – 12am"] },
+  { name:"Librería Castelar", tipo:"Cocktail bar · Biblioteca", addr:"Emilio Castelar 135, Polanco", ig:"libreriacastelarpolanco",
+    gmaps:"https://maps.google.com/?q=Libreria+Castelar+Emilio+Castelar+135+Polanco+CDMX",
+    lat:19.4303455, lng:-99.198304, cat:"cocktail",
+    hours:["Lun: 5pm – 2am","Mar: 5pm – 2am","Mié: 5pm – 2am","Jue: 5pm – 2am","Vie: 5pm – 12am","Sáb: 5pm – 2am","Dom: 5pm – 2am"] },
+  // ── AGAVE ──
+  { name:"Tlecān", tipo:"Agave bar · Cocktail bar", addr:"Álvaro Obregón 228, Roma Norte", ig:"tlecan",
+    gmaps:"https://maps.google.com/?q=Tlecan+Alvaro+Obregon+228+Roma+Norte+CDMX",
+    lat:19.4169081, lng:-99.1654616, cat:"agave",
+    hours:["Lun: 6pm – 2am","Mar: 6pm – 2am","Mié: 6pm – 2am","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: 6pm – 2am"] },
+  { name:"Bósforo", tipo:"Mezcalería", addr:"Luis Moya 31, Centro Histórico", ig:"bosforomezcaleria",
+    gmaps:"https://maps.google.com/?q=Bosforo+mezcaleria+Luis+Moya+31+Centro+Historico+CDMX",
+    lat:19.4332967, lng:-99.1451224, cat:"agave",
+    hours:["Lun: Cerrado","Mar: 6pm – 1:30am","Mié: 6pm – 1:30am","Jue: 6pm – 2:30am","Vie: 6pm – 2:30am","Sáb: 6pm – 2:30am","Dom: Cerrado"] },
+  { name:"La Clandestina", tipo:"Mezcalería", addr:"Álvaro Obregón 298, Condesa", ig:"laclandestinamezcaleria",
+    gmaps:"https://maps.google.com/?q=La+Clandestina+mezcaleria+Alvaro+Obregon+298+Condesa+CDMX",
+    lat:19.4162483, lng:-99.1691707, cat:"agave",
+    hours:["Lun: 6:30pm – 1am","Mar: 6:30pm – 1am","Mié: 6:30pm – 1am","Jue: 6:30pm – 2am","Vie: 6:30pm – 2am","Sáb: 6:30pm – 2am","Dom: Cerrado"] },
+  { name:"La Lavandería", tipo:"Mezcalería · Agave bar", addr:"Álvaro Obregón 298-B, Hipódromo", ig:"lalavanderiamx",
+    gmaps:"https://maps.google.com/?q=La+Lavanderia+Nocturna+Alvaro+Obregon+298+Hipodromo+CDMX",
+    lat:19.4161419, lng:-99.1691102, cat:"agave",
+    hours:["Lun: Cerrado","Mar: 6pm – 1am","Mié: 6pm – 1am","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: Cerrado"] },
+  { name:"Despacho Margarita", tipo:"Margarita bar · Agave bar", addr:"Córdoba 115, Roma Norte", ig:"despachomargarita",
+    gmaps:"https://maps.google.com/?q=Despacho+Margarita+Cordoba+115+Roma+Norte+CDMX",
+    lat:19.4178519, lng:-99.1584818, cat:"agave",
+    hours:["Lun: 11am – 12am","Mar: 11am – 12am","Mié: 11am – 12am","Jue: 11am – 12am","Vie: 11am – 12am","Sáb: 11am – 12am","Dom: 11am – 12am"] },
+  { name:"Barra Lupe", tipo:"Cantina · Agave bar", addr:"Orizaba 154, Roma Norte", ig:"barralupemx",
+    gmaps:"https://maps.google.com/?q=Barra+Lupe+Orizaba+154+Roma+Norte+CDMX",
+    lat:19.4153952, lng:-99.1587829, cat:"agave",
+    hours:["Lun: 1pm – 11:30pm","Mar: 1pm – 11:30pm","Mié: 1pm – 11:30pm","Jue: 1pm – 1am","Vie: 1pm – 1am","Sáb: 1pm – 1am","Dom: 1pm – 11:30pm"] },
+  // ── MUSICA ──
+  { name:"Parker & Lenox", tipo:"Jazz bar · Cocktail bar", addr:"General Prim 100, Juárez", ig:"parkerandlenox",
+    gmaps:"https://maps.google.com/?q=Parker+Lenox+General+Prim+100+Juarez+CDMX",
+    lat:19.4308761, lng:-99.1565254, cat:"musica",
+    hours:["Lun: Cerrado","Mar: 6pm – 1am","Mié: 6pm – 1am","Jue: 6pm – 1am","Vie: 6pm – 2am","Sáb: 6pm – 2am","Dom: Cerrado"] },
+  { name:"Tokyo Music Bar", tipo:"Listening bar · Cocktail bar", addr:"Río Pánuco 132, Cuauhtémoc", ig:"tokyomusicbar",
+    gmaps:"https://maps.google.com/?q=Tokyo+Music+Bar+Rio+Panuco+132+Cuauhtemoc+CDMX",
+    lat:19.4295628, lng:-99.1696231, cat:"musica",
+    hours:["Lun: 7pm – 2am","Mar: 7pm – 2am","Mié: 7pm – 2am","Jue: 7pm – 2am","Vie: 7pm – 2am","Sáb: 7pm – 2am","Dom: 7am – 12am"] },
+  { name:"Shhh", tipo:"Listening bar · Cocktail bar", addr:"Av. Ámsterdam 62, Hipódromo", ig:"shhh99r",
+    gmaps:"https://maps.google.com/?q=Shhh+bar+Amsterdam+62+Hipodromo+CDMX",
+    lat:19.4145247, lng:-99.1697277, cat:"musica",
+    hours:["Lun: Cerrado","Mar: Cerrado","Mié: 6pm – 12am","Jue: 6pm – 2am","Vie: 6pm – 2am","Sáb: 4pm – 2am","Dom: 4pm – 12am"] },
+  { name:"Jazzatlán Capital", tipo:"Jazz club · Live music", addr:"Guanajuato 239, Roma Norte", ig:"jazzatlancapital",
+    gmaps:"https://maps.google.com/?q=Jazzatlan+Capital+Guanajuato+239+Roma+Norte+CDMX",
+    lat:19.4159187, lng:-99.1648283, cat:"musica",
+    hours:["Lun: 6pm – 1am","Mar: 6pm – 1am","Mié: 6pm – 1am","Jue: 6pm – 1am","Vie: 6pm – 1am","Sáb: 5:30pm – 1am","Dom: 5:30pm – 1am"] },
+  { name:"Zinco Jazz Club", tipo:"Jazz club", addr:"Motolinía 20, Centro Histórico", ig:"zincojazzclub",
+    gmaps:"https://maps.google.com/?q=Zinco+Jazz+Club+Motolinia+20+Centro+Historico+CDMX",
+    lat:19.4340762, lng:-99.1371101, cat:"musica",
+    hours:["Lun: Cerrado","Mar: Cerrado","Mié: 9pm – 1am","Jue: 9pm – 1am","Vie: 9pm – 1am","Sáb: 9pm – 1am","Dom: Cerrado"] },
+  // ── ROOFTOP ──
+  { name:"Cityzen Bar", tipo:"Rooftop bar", addr:"Sofitel Mexico City Reforma, Reforma 297", ig:"cityzenmexico",
+    gmaps:"https://maps.google.com/?q=Cityzen+Bar+Sofitel+Mexico+City+Reforma",
+    lat:19.4285207, lng:-99.1659622, cat:"rooftop",
+    hours:["Lun: 8am – 1am","Mar: 8am – 1am","Mié: 8am – 1am","Jue: 8am – 2am","Vie: 8am – 2am","Sáb: 8am – 2am","Dom: 8am – 1am"] },
+  // ── NOCHE ──
+  { name:"Departamento", tipo:"Club · Music bar", addr:"Álvaro Obregón 154, Roma Norte", ig:"departamento_studiobar",
+    gmaps:"https://maps.google.com/?q=Departamento+studio+bar+Alvaro+Obregon+154+Roma+Norte+CDMX",
+    lat:19.4176009, lng:-99.1618273, cat:"noche",
+    hours:["Lun: Cerrado","Mar: Cerrado","Mié: 6pm – 3am","Jue: 6pm – 3am","Vie: 6pm – 4am","Sáb: 6pm – 4am","Dom: 6pm – 3am"] },
+  { name:"Bar Oriente", tipo:"Club · Electronic music", addr:"Durango 181, Roma Norte", ig:"bar_oriente",
+    gmaps:"https://maps.google.com/?q=Bar+Oriente+Durango+181+Roma+Norte+CDMX",
+    lat:19.4201605, lng:-99.1653111, cat:"noche",
+    hours:["Lun: Cerrado","Mar: Cerrado","Mié: 10pm – 5am","Jue: 10pm – 5am","Vie: 10pm – 5am","Sáb: 10pm – 5am","Dom: Cerrado"] },
+  { name:"Café Paraíso", tipo:"Bar · Club tropical", addr:"Plaza Villa de Madrid 17, Roma Norte", ig:"cafeparaisomx",
+    gmaps:"https://maps.google.com/?q=Cafe+Paraiso+Plaza+Villa+de+Madrid+Roma+Norte+CDMX",
+    lat:19.4203582, lng:-99.1669034, cat:"noche",
+    hours:["Lun: Cerrado","Mar: Cerrado","Mié: Cerrado","Jue: 12am – 4am","Vie: 12am – 5am","Sáb: 12am – 5am","Dom: 12am – 5am"] },
+  { name:"Jardín Paraíso", tipo:"Bar · Terraza · Party spot", addr:"Querétaro 202, Roma Norte", ig:"_jardinmx",
+    gmaps:"https://maps.google.com/?q=Jardin+Paraiso+Queretaro+202+Roma+Norte+CDMX",
+    lat:19.4139848, lng:-99.1639166, cat:"noche",
+    hours:["Lun: Cerrado","Mar: Cerrado","Mié: Cerrado","Jue: 7pm – 12am","Vie: 7pm – 12am","Sáb: 6pm – 12am","Dom: Cerrado"] },
+  { name:"Salón San Luis", tipo:"Salsa club · Dance hall", addr:"San Luis Potosí 28, Roma Norte", ig:"sanluisclubroma",
+    gmaps:"https://maps.google.com/?q=Club+San+Luis+San+Luis+Potosi+28+Roma+Norte+CDMX",
+    lat:19.4146421, lng:-99.1558177, cat:"noche",
+    hours:["Lun: 8pm – 4am","Mar: 8pm – 4am","Mié: 8pm – 4am","Jue: 8pm – 4am","Vie: 8pm – 4am","Sáb: 8pm – 4am","Dom: Cerrado"] },
+];
+
+const catColors = { cocktail:"#c9a84c", agave:"#7fbf9e", musica:"#9b7fcd", rooftop:"#5bafd6", noche:"#d67a5b" };
+const DAYS = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+const todayIdx = new Date().getDay(); // 0=Dom
+
+// ── BUILD CARDS ───────────────────────────────────────────────────────────
+function buildCard(bar, i){
+  const card = document.createElement("div");
+  card.className = "bar-card";
+
+  const todayStr = bar.hours[todayIdx];
+
+  let hoursHTML = `<div class="bar-hours">
+    <button class="hours-toggle" onclick="toggleHours(this)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,3 5,7 8,3"/></svg>
+      Horarios
+    </button>
+    <ul class="hours-list">`;
+  bar.hours.forEach((h,idx)=>{
+    const isToday = idx === todayIdx;
+    const [day,...rest] = h.split(":");
+    hoursHTML += `<li class="${isToday?'today':''}"><span class="day">${day}:</span><span class="time">${rest.join(":").trim()}</span></li>`;
+  });
+  hoursHTML += `</ul></div>`;
+
+  card.innerHTML = `
+    <p class="bar-name">${bar.name}</p>
+    <p class="bar-tipo">${bar.tipo}</p>
+    <p class="bar-address">${bar.addr}</p>
+    ${hoursHTML}
+    <div class="bar-links">
+      <a class="bar-ig" href="https://instagram.com/${bar.ig}" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        @${bar.ig}
+      </a>
+      <div class="link-sep"></div>
+      <a class="bar-gmaps" href="${bar.gmaps}" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Maps
+      </a>
+    </div>`;
+  return card;
+}
+
+function toggleHours(btn){
+  btn.classList.toggle("open");
+  btn.nextElementSibling.classList.toggle("visible");
+}
+
+["cocktail","agave","musica","rooftop","noche"].forEach(cat=>{
+  const grid = document.getElementById(`grid-${cat}`);
+  BARS.filter(b=>b.cat===cat).forEach((b,i)=> grid.appendChild(buildCard(b,i)));
+});
+
+// ── LEAFLET MAP ───────────────────────────────────────────────────────────
+const map = L.map('leaflet-map', { zoomControl:true, scrollWheelZoom:false }).setView([19.4200, -99.1650], 14);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom:19
+}).addTo(map);
+
+// Handshake anchor — star pin
+const hsIcon = L.divIcon({
+  className:'',
+  html:`<div style="
+    width:34px;height:34px;
+    background:#c9a84c;
+    border:3px solid #fff;
+    border-radius:50% 50% 50% 0;
+    transform:rotate(-45deg);
+    box-shadow:0 2px 8px rgba(0,0,0,.5);
+    display:flex;align-items:center;justify-content:center;
+  "><span style="transform:rotate(45deg);font-size:14px;line-height:1;">★</span></div>`,
+  iconSize:[34,34], iconAnchor:[17,34], popupAnchor:[0,-36]
+});
+
+const hsPopup = `<div class="popup-hs">
+  <div class="popup-name">Handshake Speakeasy</div>
+  <div class="popup-tipo">★ #1 World's 50 Best Bars 2024</div>
+  <div class="popup-addr">Tennyson 133, Polanco, CDMX</div>
+  <div class="popup-links">
+    <a href="https://instagram.com/handshakebar" target="_blank">@handshakebar</a>
+    <a href="https://maps.google.com/?q=Handshake+Speakeasy+Tennyson+133+Polanco+CDMX" target="_blank">Ver en Maps</a>
+  </div>
+</div>`;
+
+L.marker([19.4327, -99.1965], {icon: hsIcon, zIndexOffset:1000})
+  .addTo(map)
+  .bindPopup(hsPopup, {maxWidth:240})
+  .openPopup();
+
+// Bar markers
+function makeIcon(color){
+  return L.divIcon({
+    className:'',
+    html:`<div style="
+      width:13px;height:13px;
+      background:${color};
+      border:2px solid rgba(0,0,0,.6);
+      border-radius:50%;
+      box-shadow:0 1px 4px rgba(0,0,0,.4);
+    "></div>`,
+    iconSize:[13,13], iconAnchor:[6,6], popupAnchor:[0,-10]
+  });
+}
+
+const markersBycat = {};
+BARS.forEach(bar=>{
+  const icon = makeIcon(catColors[bar.cat]);
+  const popup = `<div>
+    <div class="popup-name">${bar.name}</div>
+    <div class="popup-tipo">${bar.tipo}</div>
+    <div class="popup-addr">${bar.addr}</div>
+    <div class="popup-links">
+      <a href="https://instagram.com/${bar.ig}" target="_blank">@${bar.ig}</a>
+      <a href="${bar.gmaps}" target="_blank">Ver en Maps →</a>
+    </div>
+  </div>`;
+  const marker = L.marker([bar.lat, bar.lng], {icon})
+    .addTo(map)
+    .bindPopup(popup, {maxWidth:240});
+  if(!markersBycat[bar.cat]) markersBycat[bar.cat]=[];
+  markersBycat[bar.cat].push(marker);
+});
+
+// Filters
+document.getElementById("map-filters").addEventListener("click",e=>{
+  const btn=e.target.closest(".map-filter-btn");
+  if(!btn) return;
+  const cat=btn.dataset.cat;
+  document.querySelectorAll(".map-filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  Object.entries(markersBycat).forEach(([c, markers])=>{
+    markers.forEach(m=>{
+      if(cat==="all"||c===cat){ if(!map.hasLayer(m)) map.addLayer(m); }
+      else { if(map.hasLayer(m)) map.removeLayer(m); }
+    });
+  });
+});
+
+// ── QR ────────────────────────────────────────────────────────────────────
+new QRCode(document.getElementById("qr-container"),{text:window.location.href,width:140,height:140,colorDark:"#0a0a0a",colorLight:"#f0ebe2",correctLevel:QRCode.CorrectLevel.M});
+</script>
+
+
+</body></html>
