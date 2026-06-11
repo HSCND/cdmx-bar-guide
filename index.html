@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CDMX Guide — Handshake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0a0a0a;--ink2:#141414;--ink3:#1e1e1e;
+  --gold:#c9a84c;--gold-lt:#e2c06e;--gold-dk:#7a5f28;
+  --white:#f0ebe2;--muted:#6a6258;--rule:#2a2a2a;
+}
+html,body{background:var(--ink)!important;color:var(--white)!important;font-family:'DM Mono',monospace;font-size:11px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+
+/* MASTHEAD */
+.masthead{position:relative;overflow:hidden;border-bottom:1px solid var(--gold-dk);min-height:140px;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;padding:0 28px 18px;gap:12px;}
+.masthead-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=1400&q=60&auto=format');background-size:cover;background-position:center 40%;filter:brightness(0.22) sepia(20%);z-index:0;}
+.masthead-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 0%,rgba(10,10,10,0.85) 100%);}
+.masthead-left,.masthead-center,.masthead-right{position:relative;z-index:1;}
+.masthead-left{font-size:9px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:2;}
+.masthead-center{text-align:center;padding-top:24px;}
+.masthead-title{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,54px);font-weight:700;line-height:1;color:var(--white);text-shadow:0 2px 20px rgba(0,0,0,.8);}
+.masthead-title em{color:var(--gold);font-style:italic;}
+.masthead-sub{font-family:'EB Garamond',serif;font-size:13px;font-style:italic;color:var(--muted);margin-top:5px;}
+.masthead-right{text-align:right;font-size:9px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:2;}
+.masthead-right span{color:var(--gold);}
+
+/* NAV */
+.cat-nav{background:var(--ink2);border-bottom:1px solid var(--rule);display:flex;justify-content:center;flex-wrap:wrap;}
+.cat-btn{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-right:1px solid var(--rule);padding:10px 14px;cursor:pointer;transition:background .15s,color .15s;display:flex;align-items:center;gap:5px;}
+.cat-btn:first-child{border-left:1px solid var(--rule);}
+.cat-btn:hover,.cat-btn.active{background:var(--gold);color:var(--ink);}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:220px 1fr 220px;min-height:calc(100vh - 200px);border-bottom:1px solid var(--rule);}
+
+/* SIDEBARS */
+.sidebar{background:var(--ink2);border-right:1px solid var(--rule);overflow-y:auto;max-height:80vh;}
+.sidebar.right{border-right:none;border-left:1px solid var(--rule);}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-track{background:var(--ink2);}
+.sidebar::-webkit-scrollbar-thumb{background:var(--gold-dk);}
+.sidebar-cat-header{background:var(--ink3);border-bottom:1px solid var(--rule);padding:7px 12px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:2;}
+.sidebar-cat-header span{font-size:8px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.bar-entry{padding:9px 12px 8px;border-bottom:1px solid var(--rule);cursor:pointer;transition:background .12s;background:var(--ink2);}
+.bar-entry:hover{background:var(--ink3);}
+.bar-entry.highlighted{background:var(--ink3);border-left:2px solid var(--gold);}
+.bar-entry-num{font-size:8px;color:var(--gold-dk);letter-spacing:.08em;margin-bottom:1px;}
+.bar-entry-name{font-family:'EB Garamond',serif;font-size:14px;color:var(--white);line-height:1.2;margin-bottom:2px;}
+.bar-entry-tipo{font-size:8.5px;color:var(--muted);font-weight:300;}
+.bar-entry-hours{font-size:8px;color:var(--gold);font-weight:500;margin-top:3px;}
+.bar-entry-links{display:flex;gap:8px;margin-top:4px;}
+.bar-entry-links a{font-size:8px;color:var(--gold-dk);text-decoration:none;transition:color .12s;}
+.bar-entry-links a:hover{color:var(--gold);}
+
+/* MAP */
+.map-center{position:relative;}
+#leaflet-map{width:100%;height:100%;min-height:600px;}
+.leaflet-control-attribution{font-size:8px!important;opacity:.4;}
+.leaflet-control-zoom a{background:var(--ink2)!important;color:var(--gold)!important;border-color:var(--rule)!important;}
+
+/* POPUPS */
+.leaflet-popup-content-wrapper{background:var(--ink2)!important;border-radius:0!important;box-shadow:2px 2px 0 var(--gold-dk)!important;padding:0!important;border:1px solid var(--gold-dk)!important;}
+.leaflet-popup-content{margin:13px 15px!important;color:var(--white)!important;font-family:'DM Mono',monospace!important;font-size:11px!important;line-height:1.5!important;min-width:180px;}
+.leaflet-popup-tip-container{display:none;}
+.leaflet-popup-close-button{color:var(--muted)!important;top:6px!important;right:8px!important;}
+.p-num{font-size:8px;color:var(--gold-dk);letter-spacing:.1em;margin-bottom:2px;}
+.p-name{font-family:'Playfair Display',serif;font-size:15px;color:var(--white);margin-bottom:3px;line-height:1.2;}
+.p-tipo{font-size:8.5px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.p-addr{font-size:9.5px;color:var(--muted);margin-bottom:5px;}
+.p-hours{font-size:9px;color:var(--gold);margin-bottom:7px;}
+.p-links{display:flex;gap:10px;}
+.p-links a{font-size:9px;color:var(--gold-dk);text-decoration:none;}
+.p-links a:hover{color:var(--gold);}
+.p-hs .p-name{color:var(--gold);}
+
+/* FOOTER */
+.bottom-bar{background:var(--ink2);border-top:1px solid var(--gold-dk);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px 28px;gap:20px;}
+.bottom-legend{display:flex;flex-wrap:wrap;gap:8px 16px;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.bottom-qr{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bottom-qr-label{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+#qr-container{padding:8px;background:var(--white);}
+.bottom-sig{text-align:right;font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:var(--muted);line-height:1.9;}
+.bottom-sig strong{font-family:'Playfair Display',serif;font-style:normal;font-size:15px;color:var(--white);display:block;}
+
+/* MOBILE */
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr;}
+  .sidebar{border-right:none;border-bottom:1px solid var(--rule);max-height:260px;}
+  .sidebar.right{border-left:none;border-top:1px solid var(--rule);max-height:260px;}
+  #leaflet-map{min-height:380px;}
+  .masthead{grid-template-columns:1fr;padding:16px 20px 14px;min-height:110px;}
+  .masthead-left,.masthead-right{display:none;}
+  .bottom-bar{grid-template-columns:1fr;text-align:center;}
+  .bottom-legend{justify-content:center;}
+  .bottom-sig{text-align:center;}
+  .cat-btn{padding:9px 10px;}
+  .cat-btn .lbl{display:none;}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-bg"></div>
+  <div class="masthead-left">Ciudad de México<br>Guía completa<br>por Handshake</div>
+  <div class="masthead-center">
+    <div class="masthead-title">CDMX <em>Guide</em></div>
+    <div class="masthead-sub">Una selección recomendada por Handshake Speakeasy</div>
+  </div>
+  <div class="masthead-right">Amberes 65<br>Col. Juárez, CDMX<br><span>@handshakebar</span></div>
+</header>
+
+<nav class="cat-nav">
+  <button class="cat-btn active" data-cat="all">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <span class="lbl">Todos</span>
+  </button>
+  <button class="cat-btn" data-cat="cocktail">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M12 11v11M3 3l7 8h4l7-8H3z"/></svg>
+    <span class="lbl">Cocktail</span>
+  </button>
+  <button class="cat-btn" data-cat="agave">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12C12 12 7 9 5 5M12 12C12 12 17 9 19 5M12 12C12 12 8 7 8 2M12 12C12 12 16 7 16 2"/></svg>
+    <span class="lbl">Agave</span>
+  </button>
+  <button class="cat-btn" data-cat="musica">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    <span class="lbl">Música</span>
+  </button>
+  <button class="cat-btn" data-cat="rooftop">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <span class="lbl">Rooftop</span>
+  </button>
+  <button class="cat-btn" data-cat="noche">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span class="lbl">Late Night</span>
+  </button>
+  <button class="cat-btn" data-cat="vino">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M12 15v7M5 3h14l-2 9a5 5 0 0 1-10 0L5 3z"/></svg>
+    <span class="lbl">Vino</span>
+  </button>
+  <button class="cat-btn" data-cat="resto">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>
+    <span class="lbl">Restaurantes</span>
+  </button>
+  <button class="cat-btn" data-cat="cafe">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+    <span class="lbl">Café</span>
+  </button>
+  <button class="cat-btn" data-cat="tacos">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11c0-4.4 3.6-8 8-8s8 3.6 8 8"/><path d="M3 11h18"/><path d="M5 11c0 4 2.5 7 6 8.5"/></svg>
+    <span class="lbl">Tacos</span>
+  </button>
+  <button class="cat-btn" data-cat="cantina">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+    <span class="lbl">Cantinas</span>
+  </button>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar-left"></aside>
+  <div class="map-center"><div id="leaflet-map"></div></div>
+  <aside class="sidebar right" id="sidebar-right"></aside>
+</div>
+
+<footer class="bottom-bar">
+  <div class="bottom-legend">
+    <div class="legend-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><path d="M8 22h8M12 11v11M3 3l7 8h4l7-8H3z"/></svg>Cocktail</div>
+    <div class="legend-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#5a9e7a" stroke-width="2"><path d="M12 22V12M12 12C12 12 7 9 5 5M12 12C12 12 17 9 19 5"/></svg>Agave</div>
+    <div class="legend-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9b7fcd" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/></svg>Música</div>
+    <div class="legend-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#5bafd6" stroke-width="2"><path d="M3 9l9-7 9 7v11H3z"/></svg>Rooftop</div>
+    <div class="legend-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d67a5b" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Late Night</div>
+    <div class="legend-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#b07ab0" stroke-width="2"><path d="M8 22h8M12 15v7M5 3h14l-2 9a5 5 0 0 1-10 0L5 3z"/></svg>Vino</div>
+    <div class="legend-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a96a" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/></svg>Resto</div>
+    <div class="legend-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#7ab0d4" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/></svg>Café/Tacos</div>
+    <div class="legend-item"><svg width="10" height="10" viewBox="0 0 24 24" fill="#c9a84c" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Handshake</div>
+  </div>
+  <div class="bottom-qr">
+    <div class="bottom-qr-label">Compartir guía</div>
+    <div id="qr-container"></div>
+  </div>
+  <div class="bottom-sig">
+    <strong>Handshake Speakeasy</strong>
+    Amberes 65, Col. Juárez · CDMX<br>
+    La ciudad vista desde la barra.
+  </div>
+</footer>
+
+<script>
+const todayIdx = new Date().getDay();
+const catColors = {
+  cocktail:"#c9a84c", agave:"#5a9e7a", musica:"#9b7fcd",
+  rooftop:"#5bafd6", noche:"#d67a5b", vino:"#b07ab0",
+  resto:"#d4a96a", cafe:"#7ab0d4", tacos:"#7ab0d4", cantina:"#a07060"
+};
+const catNames = {
+  cocktail:"Cocktail Bars", agave:"Agave & Mezcal", musica:"Listening & Música",
+  rooftop:"Rooftops", noche:"Late Night", vino:"Wine Bars",
+  resto:"Restaurantes", cafe:"Cafés", tacos:"Tacos", cantina:"Cantinas Tradicionales"
+};
+const catSVG = {
+  cocktail:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 22h8M12 11v11M3 3l7 8h4l7-8H3z"/></svg>`,
+  agave:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22V12M12 12C12 12 7 9 5 5M12 12C12 12 17 9 19 5M12 12C12 12 8 7 8 2M12 12C12 12 16 7 16 2"/></svg>`,
+  musica:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+  rooftop:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`,
+  noche:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+  vino:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 22h8M12 15v7M5 3h14l-2 9a5 5 0 0 1-10 0L5 3z"/></svg>`,
+  resto:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>`,
+  cafe:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>`,
+  tacos:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>`,
+  cantina:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`,
+};
+
+const BARS = [
+  // ── COCKTAIL ──
+  {n:1,  name:"Long Story Short",     tipo:"Cocktail bar",            addr:"Londres 178, Juárez",               ig:"longstoryshortcdmx",      gmaps:"https://maps.google.com/?q=Long+Story+Short+Bar+Juarez+CDMX",                         lat:19.4242039,lng:-99.1664242,cat:"cocktail",hours:["5pm–1am","5pm–1am","5pm–2am","5pm–2am","5pm–2am","5pm–2am","Cerrado"]},
+  {n:2,  name:"FO+MA",                tipo:"Cocktail bar",            addr:"San Luis Potosí 37, Roma Norte",    ig:"fomabar.mx",              gmaps:"https://maps.google.com/?q=FORM+MATTER+San+Luis+Potosi+37+Roma+Norte+CDMX",            lat:19.4148111,lng:-99.1565436,cat:"cocktail",hours:["7pm–1am","6pm–1am","Cerrado","6pm–1am","6pm–1:30am","6pm–1:30am","6pm–1am"]},
+  {n:3,  name:"King Cole Bar",         tipo:"Hotel bar",               addr:"St. Regis, Reforma 439",            ig:"stregismexicocity",       gmaps:"https://maps.google.com/?q=King+Cole+Bar+St+Regis+Mexico+City",                       lat:19.425627, lng:-99.172356, cat:"cocktail",hours:["11am–2am","11am–2am","11am–2am","11am–2am","11am–2am","11am–2am","11am–1am"]},
+  {n:4,  name:"Ahorita Cantina",      tipo:"Cantina · Cocktail",      addr:"Reforma 390, Plaza Alma, Juárez",   ig:"ahoritacantina",          gmaps:"https://maps.google.com/?q=Ahorita+Cantina+Reforma+390+Juarez+CDMX",                  lat:19.4254832,lng:-99.1696632,cat:"cocktail",hours:["6pm–2am","Cerrado","Cerrado","6pm–2am","6pm–2am","6pm–2am","6pm–2am"]},
+  {n:5,  name:"Chow Chow",            tipo:"Cocktail · China",        addr:"Av. Chapultepec 403, Juárez",       ig:"chowchowh",               gmaps:"https://maps.google.com/?q=Chow+Chow+House+Chapultepec+403+Juarez+CDMX",             lat:19.4228804,lng:-99.1677812,cat:"cocktail",hours:["7pm–2am","7pm–2am","7pm–2am","7pm–2am","7pm–2am","7pm–2am","7pm–2am"]},
+  {n:6,  name:"Kaito",                tipo:"Cocktail · Japonesa",     addr:"Hamburgo 70B, Juárez",              ig:"kaitodelvalle",           gmaps:"https://maps.google.com/?q=Kaito+del+Valle+Hamburgo+70+Juarez+CDMX",                  lat:19.4271917,lng:-99.1625031,cat:"cocktail",hours:["5pm–1am","5pm–1am","5pm–1am","12:30pm–2am","12:30pm–2am","12:30pm–2am","12:30pm–1am"]},
+  {n:7,  name:"Xaman",                tipo:"Speakeasy",               addr:"Copenhague 6, Juárez",              ig:"xamanbar",                gmaps:"https://maps.google.com/?q=Xaman+Bar+Copenhague+6+Juarez+CDMX",                      lat:19.4278009,lng:-99.1638473,cat:"cocktail",hours:["Cerrado","Cerrado","7pm–1am","7pm–2am","7pm–2am","7pm–2am","Cerrado"]},
+  {n:8,  name:"Hanky Panky",          tipo:"Speakeasy",               addr:"Turín 52, Juárez",                  ig:"hankypankydf",            gmaps:"https://maps.google.com/?q=Hanky+Panky+Cocktail+Bar+Turin+52+Juarez+CDMX",           lat:19.427017, lng:-99.1556652,cat:"cocktail",hours:["Cerrado","5pm–2am","5pm–2am","5pm–2am","5pm–2am","5pm–2am","5pm–12am"]},
+  {n:9,  name:"Fifty Mils",           tipo:"Hotel bar",               addr:"Four Seasons, Reforma 500",         ig:"fiftymils",               gmaps:"https://maps.google.com/?q=Fifty+Mils+Four+Seasons+Reforma+500+CDMX",                 lat:19.4232368,lng:-99.1743556,cat:"cocktail",hours:["12pm–1am","12pm–1am","12pm–1am","12pm–2am","12pm–2am","12pm–2am","12pm–1am"]},
+  {n:10, name:"Brujas",               tipo:"Cocktail bar",            addr:"Río de Janeiro 56, Roma Norte",     ig:"brujasmex",               gmaps:"https://maps.google.com/?q=Bar+Las+Brujas+Rio+de+Janeiro+56+Roma+Norte+CDMX",         lat:19.4211829,lng:-99.1597732,cat:"cocktail",hours:["Cerrado","5pm–2am","5pm–2am","5pm–2am","5pm–2am","5pm–2am","5pm–12am"]},
+  {n:11, name:"Licorería Limantour",  tipo:"Cocktail bar",            addr:"Álvaro Obregón 106, Roma Norte",    ig:"limantourmx",             gmaps:"https://maps.google.com/?q=Licoreria+Limantour+Alvaro+Obregon+106+CDMX",              lat:19.4180939,lng:-99.1593559,cat:"cocktail",hours:["6pm–12am","6pm–12am","6pm–12am","6pm–2am","3pm–2am","3pm–2am","3pm–12am"]},
+  {n:12, name:"Café de Nadie",        tipo:"Cocktail · Listening",    addr:"Chihuahua 135, Roma Norte",         ig:"cafe.denadie",            gmaps:"https://maps.google.com/?q=Cafe+de+Nadie+Chihuahua+135+Roma+Norte+CDMX",              lat:19.417402, lng:-99.1605353,cat:"cocktail",hours:["4pm–11pm","Cerrado","6pm–2am","2pm–2am","2pm–2am","12pm–2am","12pm–11pm"]},
+  {n:13, name:"Rayo",                 tipo:"Cocktail · Agave",        addr:"Salamanca 85, Roma Norte",          ig:"rayocdmx",                gmaps:"https://maps.google.com/?q=Rayo+Bar+Salamanca+85+Roma+Norte+CDMX",                    lat:19.4182516,lng:-99.1694912,cat:"cocktail",hours:["6pm–12am","Cerrado","6pm–2am","6pm–2am","6pm–2am","6pm–2am","6pm–12am"]},
+  {n:14, name:"Mauro",                tipo:"Cocktail bar",            addr:"Tabasco 149, Roma Norte",           ig:"barmauromx",              gmaps:"https://maps.google.com/?q=Bar+Mauro+Tabasco+149+Roma+Norte+CDMX",                    lat:19.419464, lng:-99.1593451,cat:"cocktail",hours:["5pm–11pm","Cerrado","5pm–11pm","5pm–12am","4pm–12am","4pm–12am","3pm–10pm"]},
+  {n:15, name:"Baltra",               tipo:"Cocktail bar",            addr:"Iztaccíhuatl 36D, Condesa",         ig:"baltrabar",               gmaps:"https://maps.google.com/?q=Baltra+Bar+Iztaccihuatl+36+Condesa+CDMX",                 lat:19.4094971,lng:-99.16887,  cat:"cocktail",hours:["6pm–12am","6pm–1am","6pm–1am","6pm–2am","6pm–2am","6pm–2am","6pm–12am"]},
+  {n:16, name:"Obsidiana",            tipo:"Agave · Cocktail",        addr:"Sofitel Reforma 297",               ig:"lobsidianbar",            gmaps:"https://maps.google.com/?q=Obsidiana+bar+Sofitel+Mexico+City+Reforma",               lat:19.4284387,lng:-99.1663194,cat:"cocktail",hours:["—","—","—","—","—","—","—"]},
+  {n:17, name:"Artemisia",            tipo:"Speakeasy",               addr:"Tonalá 23, Roma Norte",             ig:"maison_artemisia",        gmaps:"https://maps.google.com/?q=Maison+Artemisia+Tonala+23+Roma+Norte+CDMX",              lat:19.4207265,lng:-99.1634259,cat:"cocktail",hours:["Cerrado","6pm–2am","6pm–2am","6pm–2am","6pm–2am","6pm–2am","6pm–2am"]},
+  {n:18, name:"Outline",              tipo:"Cocktail · Restaurant",   addr:"Av. Oaxaca 99, Roma Norte",         ig:"outlinecdmx",             gmaps:"https://maps.google.com/?q=Outline+bar+Oaxaca+99+Roma+Norte+CDMX",                   lat:19.4187152,lng:-99.1677788,cat:"cocktail",hours:["Cerrado","Cerrado","5pm–2am","11am–2am","12:30pm–2am","10am–2am","10am–2am"]},
+  {n:19, name:"Katz",                 tipo:"Cocktail bar",            addr:"Álvaro Obregón 124, Roma Norte",    ig:"katz.mx",                 gmaps:"https://maps.google.com/?q=KATZ+Cocktail+Bar+Alvaro+Obregon+124+Roma+Norte+CDMX",    lat:19.4178485,lng:-99.1603398,cat:"cocktail",hours:["Cerrado","5pm–12am","5pm–12am","5pm–1:30am","5pm–1:30am","5pm–1:30am","6pm–1am"]},
+  {n:20, name:"Ladina",               tipo:"Wine · Cocktail",         addr:"Colima 333, Roma Norte",            ig:"ladinabar",               gmaps:"https://maps.google.com/?q=Ladina+Bar+Colima+333+Roma+Norte+CDMX",                    lat:19.4183836,lng:-99.1671654,cat:"cocktail",hours:["4pm–12am","4pm–12am","4pm–2am","4pm–2am","4pm–2am","10am–2am","10am–2am"]},
+  {n:21, name:"Salón Palomilla",      tipo:"Bar · Cantina",           addr:"Av. Yucatán 83, Roma Norte",        ig:"salon_palomilla",         gmaps:"https://maps.google.com/?q=Salon+Palomilla+Yucatan+83+Roma+Norte+CDMX",               lat:19.414152, lng:-99.1625492,cat:"cocktail",hours:["—","6pm–12am","6pm–2am","6pm–2am","6pm–2am","6pm–2am","6pm–12am"]},
+  {n:22, name:"Básico",              tipo:"Bar casual",              addr:"Tepic 21, Roma Sur",                ig:"bar_basico",              gmaps:"https://maps.google.com/?q=Bar+Basico+Tepic+21+Roma+Sur+CDMX",                        lat:19.4072446,lng:-99.1611379,cat:"cocktail",hours:["Cerrado","4pm–11pm","4pm–11pm","4pm–1am","4pm–1am","4pm–1am","Cerrado"]},
+  {n:23, name:"Bar Félix",           tipo:"Bar · Restaurant",        addr:"Álvaro Obregón 64, Roma Norte",     ig:"_barfelix",               gmaps:"https://maps.google.com/?q=Bar+Felix+Alvaro+Obregon+64+Roma+Norte+CDMX",              lat:19.4183085,lng:-99.1576152,cat:"cocktail",hours:["4pm–2am","4pm–2am","4pm–2:30am","4pm–3am","4pm–3am","2pm–3am","2pm–2am"]},
+  {n:24, name:"Rosso Speakeasy",     tipo:"Speakeasy",               addr:"Puebla 329, Roma Norte",            ig:"rosso.speakeasy",         gmaps:"https://maps.google.com/?q=Rosso+Speakeasy+Puebla+329+Roma+Norte+CDMX",               lat:19.4207986,lng:-99.1716552,cat:"cocktail",hours:["Cerrado","6pm–2am","6pm–2am","6pm–2am","6pm–2am","6pm–2am","4pm–11pm"]},
+  {n:25, name:"Owl Bar",             tipo:"Cocktail bar",            addr:"Atlixco 94, Condesa",               ig:"owlbar_mx",               gmaps:"https://maps.google.com/?q=Owl+Bar+Atlixco+94+Condesa+CDMX",                         lat:19.4117514,lng:-99.1748872,cat:"cocktail",hours:["Cerrado","6pm–2am","6pm–2am","6pm–2am","6pm–2am","6pm–2am","Cerrado"]},
+  {n:26, name:"Antesala",            tipo:"Cocktail bar",            addr:"Sinaloa 141, Roma Norte",           ig:"antesala.cdmx",           gmaps:"https://maps.google.com/?q=Antesala+Bar+Sinaloa+141+Roma+Norte+CDMX",                 lat:19.4202542,lng:-99.1701144,cat:"cocktail",hours:["Cerrado","6pm–12am","6pm–12am","6pm–1am","6pm–1am","6pm–1am","Cerrado"]},
+  {n:27, name:"RO Upstairs",         tipo:"Cocktail bar",            addr:"Anatole France 71B, Polanco",       ig:"ro.upstairs",             gmaps:"https://maps.google.com/?q=Ro+Upstairs+Anatole+France+71+Polanco+CDMX",              lat:19.4302971,lng:-99.1976736,cat:"cocktail",hours:["Cerrado","6pm–12am","6pm–12am","6pm–1am","6pm–1am","6pm–1am","Cerrado"]},
+  {n:28, name:"Librería Valladolid", tipo:"Cocktail · Biblioteca",   addr:"Tabasco 321, Roma Norte",           ig:"libreriavalladolid",      gmaps:"https://maps.google.com/?q=Libreria+Valladolid+Tabasco+321+Roma+Norte+CDMX",          lat:19.4176272,lng:-99.167492, cat:"cocktail",hours:["Cerrado","5pm–2am","5pm–2am","5pm–2am","5pm–2am","5pm–2am","3pm–12am"]},
+  {n:29, name:"Librería Castelar",   tipo:"Cocktail · Biblioteca",   addr:"Emilio Castelar 135, Polanco",      ig:"libreriacastelarpolanco", gmaps:"https://maps.google.com/?q=Libreria+Castelar+Emilio+Castelar+135+Polanco+CDMX",       lat:19.4303455,lng:-99.198304, cat:"cocktail",hours:["5pm–2am","5pm–2am","5pm–2am","5pm–2am","5pm–12am","5pm–2am","5pm–2am"]},
+  {n:30, name:"Tacobar",             tipo:"Taco bar · Drinks",       addr:"Oaxaca 12, Roma Norte",             ig:"cafetacobar",             gmaps:"https://maps.google.com/?q=Cafe+Tacobar+Oaxaca+12+Roma+Norte+CDMX",                   lat:19.4225785,lng:-99.1637941,cat:"cocktail",hours:["Cerrado","3pm–1am","3pm–1am","3pm–1am","3pm–1am","3pm–1am","Cerrado"]},
+  // ── AGAVE ──
+  {n:31, name:"Tlecān",              tipo:"Agave bar",               addr:"Álvaro Obregón 228, Roma Norte",    ig:"tlecan",                  gmaps:"https://maps.google.com/?q=Tlecan+Alvaro+Obregon+228+Roma+Norte+CDMX",                lat:19.4169081,lng:-99.1654616,cat:"agave",   hours:["6pm–2am","6pm–2am","6pm–2am","6pm–2am","6pm–2am","6pm–2am","6pm–2am"]},
+  {n:32, name:"Bósforo",             tipo:"Mezcalería",              addr:"Luis Moya 31, Centro Histórico",    ig:"bosforomezcaleria",       gmaps:"https://maps.google.com/?q=Bosforo+mezcaleria+Luis+Moya+31+Centro+Historico+CDMX",   lat:19.4332967,lng:-99.1451224,cat:"agave",   hours:["Cerrado","6pm–1:30am","6pm–1:30am","6pm–2:30am","6pm–2:30am","6pm–2:30am","Cerrado"]},
+  {n:33, name:"La Clandestina",      tipo:"Mezcalería",              addr:"Álvaro Obregón 298, Condesa",       ig:"laclandestinamezcaleria", gmaps:"https://maps.google.com/?q=La+Clandestina+mezcaleria+Alvaro+Obregon+298+Condesa+CDMX",lat:19.4162483,lng:-99.1691707,cat:"agave",   hours:["6:30pm–1am","6:30pm–1am","6:30pm–1am","6:30pm–2am","6:30pm–2am","6:30pm–2am","Cerrado"]},
+  {n:34, name:"La Lavandería",       tipo:"Mezcalería · Agave",      addr:"Álvaro Obregón 298-B, Hipódromo",   ig:"lalavanderiamx",          gmaps:"https://maps.google.com/?q=La+Lavanderia+Nocturna+Alvaro+Obregon+298+Hipodromo+CDMX", lat:19.4161419,lng:-99.1691102,cat:"agave",   hours:["Cerrado","6pm–1am","6pm–1am","6pm–2am","6pm–2am","6pm–2am","Cerrado"]},
+  {n:35, name:"Despacho Margarita",  tipo:"Margarita · Agave",       addr:"Córdoba 115, Roma Norte",           ig:"despachomargarita",       gmaps:"https://maps.google.com/?q=Despacho+Margarita+Cordoba+115+Roma+Norte+CDMX",           lat:19.4178519,lng:-99.1584818,cat:"agave",   hours:["11am–12am","11am–12am","11am–12am","11am–12am","11am–12am","11am–12am","11am–12am"]},
+  {n:36, name:"Barra Lupe",          tipo:"Cantina · Agave",         addr:"Orizaba 154, Roma Norte",           ig:"barralupemx",             gmaps:"https://maps.google.com/?q=Barra+Lupe+Orizaba+154+Roma+Norte+CDMX",                   lat:19.4153952,lng:-99.1587829,cat:"agave",   hours:["1pm–11:30pm","1pm–11:30pm","1pm–11:30pm","1pm–1am","1pm–1am","1pm–1am","1pm–11:30pm"]},
+  {n:37, name:"Mano Santa",          tipo:"Mezcalería",              addr:"Insurgentes Sur 219, Roma Norte",   ig:"mano_santa_cocina_mezcal",gmaps:"https://maps.google.com/?q=Mano+Santa+Mezcal+Insurgentes+Sur+219+Roma+Norte+CDMX",    lat:19.4152,  lng:-99.1715,  cat:"agave",   hours:["Cerrado","5:30pm–2am","5:30pm–2am","4pm–2am","4pm–2am","4pm–2am","Cerrado"]},
+  // ── MUSICA ──
+  {n:38, name:"Parker & Lenox",      tipo:"Jazz · Cocktail",         addr:"General Prim 100, Juárez",          ig:"parkerandlenox",          gmaps:"https://maps.google.com/?q=Parker+Lenox+General+Prim+100+Juarez+CDMX",               lat:19.4308761,lng:-99.1565254,cat:"musica",  hours:["Cerrado","6pm–1am","6pm–1am","6pm–1am","6pm–2am","6pm–2am","Cerrado"]},
+  {n:39, name:"Tokyo Music Bar",     tipo:"Listening bar",           addr:"Río Pánuco 132, Cuauhtémoc",        ig:"tokyomusicbar",           gmaps:"https://maps.google.com/?q=Tokyo+Music+Bar+Rio+Panuco+132+Cuauhtemoc+CDMX",           lat:19.4295628,lng:-99.1696231,cat:"musica",  hours:["7pm–2am","7pm–2am","7pm–2am","7pm–2am","7pm–2am","7pm–2am","7am–12am"]},
+  {n:40, name:"Shhh",                tipo:"Listening bar",           addr:"Av. Ámsterdam 62, Hipódromo",       ig:"shhh99r",                 gmaps:"https://maps.google.com/?q=Shhh+bar+Amsterdam+62+Hipodromo+CDMX",                    lat:19.4145247,lng:-99.1697277,cat:"musica",  hours:["Cerrado","Cerrado","6pm–12am","6pm–2am","6pm–2am","4pm–2am","4pm–12am"]},
+  {n:41, name:"Jazzatlán Capital",   tipo:"Jazz · Live music",       addr:"Guanajuato 239, Roma Norte",        ig:"jazzatlancapital",        gmaps:"https://maps.google.com/?q=Jazzatlan+Capital+Guanajuato+239+Roma+Norte+CDMX",         lat:19.4159187,lng:-99.1648283,cat:"musica",  hours:["6pm–1am","6pm–1am","6pm–1am","6pm–1am","6pm–1am","5:30pm–1am","5:30pm–1am"]},
+  {n:42, name:"Zinco Jazz Club",     tipo:"Jazz club",               addr:"Motolinía 20, Centro Histórico",    ig:"zincojazzclub",           gmaps:"https://maps.google.com/?q=Zinco+Jazz+Club+Motolinia+20+Centro+Historico+CDMX",       lat:19.4340762,lng:-99.1371101,cat:"musica",  hours:["Cerrado","Cerrado","9pm–1am","9pm–1am","9pm–1am","9pm–1am","Cerrado"]},
+  {n:43, name:"Casa Franca",         tipo:"Jazz · Speakeasy",        addr:"Mérida 109, Roma Norte",            ig:"casafrancajazz",          gmaps:"https://maps.google.com/?q=Casa+Franca+Merida+109+Roma+Norte+CDMX",                  lat:19.4185,  lng:-99.1625,  cat:"musica",  hours:["Cerrado","Cerrado","7pm–2am","7pm–2am","7pm–2am","7pm–2am","Cerrado"]},
+  {n:44, name:"Choza",               tipo:"Listening bar · Thai",    addr:"Monterrey 194, Roma Norte",         ig:"choza_cdmx",              gmaps:"https://maps.google.com/?q=Choza+Monterrey+194+Roma+Norte+CDMX",                     lat:19.4168,  lng:-99.1611,  cat:"musica",  hours:["3pm–9pm","7pm–1am","Cerrado","Cerrado","Cerrado","Cerrado","3pm–9pm"]},
+  // ── ROOFTOP ──
+  {n:45, name:"Cityzen Bar",         tipo:"Rooftop bar",             addr:"Sofitel Reforma 297, Cuauhtémoc",   ig:"cityzenmexico",           gmaps:"https://maps.google.com/?q=Cityzen+Bar+Sofitel+Mexico+City+Reforma",                 lat:19.4285207,lng:-99.1659622,cat:"rooftop", hours:["8am–1am","8am–1am","8am–1am","8am–2am","8am–2am","8am–2am","8am–1am"]},
+  // ── LATE NIGHT ──
+  {n:46, name:"Departamento",        tipo:"Club · Music bar",        addr:"Álvaro Obregón 154, Roma Norte",    ig:"departamento_studiobar",  gmaps:"https://maps.google.com/?q=Departamento+studio+bar+Alvaro+Obregon+154+Roma+Norte+CDMX",lat:19.4176009,lng:-99.1618273,cat:"noche",   hours:["Cerrado","Cerrado","6pm–3am","6pm–3am","6pm–4am","6pm–4am","6pm–3am"]},
+  {n:47, name:"Bar Oriente",         tipo:"Club · Electronic",       addr:"Durango 181, Roma Norte",           ig:"bar_oriente",             gmaps:"https://maps.google.com/?q=Bar+Oriente+Durango+181+Roma+Norte+CDMX",                  lat:19.4201605,lng:-99.1653111,cat:"noche",   hours:["Cerrado","Cerrado","10pm–5am","10pm–5am","10pm–5am","10pm–5am","Cerrado"]},
+  {n:48, name:"Café Paraíso",        tipo:"Bar · Club tropical",     addr:"Plaza Villa de Madrid 17, Roma",    ig:"cafeparaisomx",           gmaps:"https://maps.google.com/?q=Cafe+Paraiso+Plaza+Villa+de+Madrid+Roma+Norte+CDMX",      lat:19.4203582,lng:-99.1669034,cat:"noche",   hours:["Cerrado","Cerrado","Cerrado","12am–4am","12am–5am","12am–5am","12am–5am"]},
+  {n:49, name:"Jardín Paraíso",      tipo:"Bar · Terraza",           addr:"Querétaro 202, Roma Norte",         ig:"_jardinmx",               gmaps:"https://maps.google.com/?q=Jardin+Paraiso+Queretaro+202+Roma+Norte+CDMX",              lat:19.4139848,lng:-99.1639166,cat:"noche",   hours:["Cerrado","Cerrado","Cerrado","7pm–12am","7pm–12am","6pm–12am","Cerrado"]},
+  {n:50, name:"Salón San Luis",      tipo:"Salsa · Dance hall",      addr:"San Luis Potosí 28, Roma Norte",    ig:"sanluisclubroma",         gmaps:"https://maps.google.com/?q=Club+San+Luis+San+Luis+Potosi+28+Roma+Norte+CDMX",          lat:19.4146421,lng:-99.1558177,cat:"noche",   hours:["8pm–4am","8pm–4am","8pm–4am","8pm–4am","8pm–4am","8pm–4am","Cerrado"]},
+  {n:51, name:"Salón Solín",         tipo:"Club · Electronic",       addr:"Av. Oaxaca 137, Roma Norte",        ig:"salonsolin",              gmaps:"https://maps.google.com/?q=Salon+Solin+Oaxaca+137+Roma+Norte+CDMX",                   lat:19.4190,  lng:-99.1678,  cat:"noche",   hours:["Cerrado","Cerrado","Cerrado","11pm–5am","11pm–5am","11pm–5am","Cerrado"]},
+  // ── WINE BARS ──
+  {n:52, name:"Loup Bar",            tipo:"Wine bar natural",        addr:"Tonalá 23, Roma Norte",             ig:"loupwinebar",             gmaps:"https://maps.google.com/?q=Loup+Bar+Tonala+23+Roma+Norte+CDMX",                      lat:19.4208,  lng:-99.1634,  cat:"vino",    hours:["2pm–11pm","2pm–11pm","2pm–11pm","2pm–12am","2pm–12am","2pm–12am","2pm–11pm"]},
+  {n:53, name:"Plonk",               tipo:"Wine bar · Cocina fusión", addr:"Iztaccíhuatl 52, Condesa",          ig:"plonk.mx",                gmaps:"https://maps.google.com/?q=Plonk+Wine+Bar+Iztaccihuatl+52+Condesa+CDMX",             lat:19.4108,  lng:-99.1692,  cat:"vino",    hours:["Cerrado","Cerrado","3pm–11pm","3pm–11pm","3pm–1am","3pm–1am","1pm–9pm"]},
+  {n:54, name:"Lenez",               tipo:"Bar de vinos",            addr:"Londres 207, Juárez",               ig:"lenez_mx",                gmaps:"https://maps.google.com/?q=Lenez+Bar+Vinos+Londres+207+Juarez+CDMX",                 lat:19.4255,  lng:-99.1662,  cat:"vino",    hours:["Cerrado","2pm–12am","2pm–12am","2pm–12am","2pm–12am","2pm–12am","Cerrado"]},
+  {n:55, name:"Hugo",                tipo:"Wine bar",                addr:"Av. Veracruz 38, Roma Norte",       ig:"hugoelwinebar",           gmaps:"https://maps.google.com/?q=Hugo+Wine+Bar+Veracruz+38+Roma+Norte+CDMX",              lat:19.4198,  lng:-99.1642,  cat:"vino",    hours:["Cerrado","2pm–11pm","2pm–11pm","2pm–11pm","2pm–11pm","2pm–11pm","3pm–9pm"]},
+  {n:56, name:"Vigneron",            tipo:"Wine bar",                addr:"Jalapa 181, Roma Norte",            ig:"vigneronmx",              gmaps:"https://maps.google.com/?q=Vigneron+Wine+Bar+Jalapa+181+Roma+Norte+CDMX",            lat:19.4165,  lng:-99.1620,  cat:"vino",    hours:["Cerrado","3pm–10pm","3pm–10pm","Cerrado","3pm–11pm","3pm–11pm","1pm–8pm"]},
+  // ── RESTAURANTES ──
+  {n:57, name:"Taller de Ostiones",  tipo:"Seafood · Oyster bar",   addr:"Versalles 113, Juárez",             ig:"tallerdeostionesbyfism",  gmaps:"https://maps.google.com/?q=Taller+de+Ostiones+Versalles+113+Juarez+CDMX",           lat:19.4270,  lng:-99.1630,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  {n:58, name:"Cobarde",             tipo:"Alta cocina · Mezcal",   addr:"Coahuila 143, Roma Norte",          ig:"cobarde_mx",              gmaps:"https://maps.google.com/?q=Cobarde+Coahuila+143+Roma+Norte+CDMX",                   lat:19.4178,  lng:-99.1648,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  {n:59, name:"Brava",               tipo:"Italiano · Rooftop",     addr:"Durango 193, piso 12, Roma Norte",  ig:"brava.cdmx",              gmaps:"https://maps.google.com/?q=Brava+Durango+193+Roma+Norte+CDMX",                      lat:19.4200,  lng:-99.1655,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  {n:60, name:"Máximo Bistrot",      tipo:"Fine dining casual",     addr:"Álvaro Obregón 65 Bis, Roma Norte", ig:"maximobistrot",           gmaps:"https://maps.google.com/?q=Maximo+Bistrot+Alvaro+Obregon+65+Roma+Norte+CDMX",       lat:19.4183,  lng:-99.1576,  cat:"resto",   hours:["Cerrado","1pm–11pm","1pm–11pm","1pm–11pm","1pm–11pm","1pm–11pm","1pm–11pm"]},
+  {n:61, name:"Lardo",               tipo:"Mediterráneo · Italiano", addr:"Agustín Melgar 6, Condesa",         ig:"lardomexico",             gmaps:"https://maps.google.com/?q=Lardo+Agustin+Melgar+6+Condesa+CDMX",                    lat:19.4125,  lng:-99.1718,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  {n:62, name:"La Docena Roma",      tipo:"Seafood · Oyster bar",   addr:"Álvaro Obregón 31, Roma",           ig:"ladocenaoysterbar",       gmaps:"https://maps.google.com/?q=La+Docena+Alvaro+Obregon+31+Roma+Norte+CDMX",            lat:19.4186,  lng:-99.1571,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  {n:63, name:"Migrante",            tipo:"Fine dining · Autor",    addr:"Chiapas 186, Roma Norte",           ig:"migranteroma",            gmaps:"https://maps.google.com/?q=Migrante+Chiapas+186+Roma+Norte+CDMX",                   lat:19.4175,  lng:-99.1658,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  {n:64, name:"Con Vista al Mar",    tipo:"Seafood · Cantina",      addr:"Jalapa 145-C, Roma Norte",          ig:"convista.almar.mx",       gmaps:"https://maps.google.com/?q=Con+Vista+al+Mar+Jalapa+145+Roma+Norte+CDMX",            lat:19.4162,  lng:-99.1628,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  {n:65, name:"Fónico",              tipo:"Cocina contemporánea",   addr:"Salamanca 85, Roma Norte",          ig:"fonicocdmx",              gmaps:"https://maps.google.com/?q=Fonico+Salamanca+85+Roma+Norte+CDMX",                    lat:19.4183,  lng:-99.1695,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  {n:66, name:"Botánico",            tipo:"Restaurante · Bar",      addr:"Alfonso Reyes 217, Condesa",        ig:"botanicomx",              gmaps:"https://maps.google.com/?q=Botanico+Alfonso+Reyes+217+Hipodromo+Condesa+CDMX",      lat:19.4118,  lng:-99.1740,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  {n:67, name:"Taverna",             tipo:"Mediterráneo",           addr:"General Prim 34, Juárez",           ig:"tavernaenprim",           gmaps:"https://maps.google.com/?q=Taverna+General+Prim+34+Juarez+CDMX",                    lat:19.4305,  lng:-99.1555,  cat:"resto",   hours:["—","—","—","—","—","—","—"]},
+  // ── CAFÉS ──
+  {n:68, name:"El Minutito",         tipo:"Café-bar",               addr:"Londres 28, Juárez",                ig:"el.minutito",             gmaps:"https://maps.google.com/?q=El+Minutito+Londres+28+Juarez+CDMX",                     lat:19.4278,  lng:-99.1648,  cat:"cafe",    hours:["—","—","—","—","—","—","—"]},
+  {n:69, name:"Café Tormenta",       tipo:"Coffee shop",            addr:"Puebla 90, Roma Norte",             ig:"tormenta.cafe",           gmaps:"https://maps.google.com/?q=Cafe+Tormenta+Puebla+90+Roma+Norte+CDMX",                lat:19.4212,  lng:-99.1595,  cat:"cafe",    hours:["—","—","—","—","—","—","—"]},
+  {n:70, name:"Panadería Gala",      tipo:"Bakery · Café speakeasy", addr:"Tonalá 143, Roma Norte",            ig:"panaderiagala",           gmaps:"https://maps.google.com/?q=Panaderia+Gala+Tonala+143+Roma+Norte+CDMX",              lat:19.4200,  lng:-99.1638,  cat:"cafe",    hours:["—","—","—","—","—","—","—"]},
+  // ── TACOS ──
+  {n:71, name:"Los Juanes",          tipo:"Taquería",               addr:"Guadalajara 29, Roma Norte",        ig:"",                        gmaps:"https://maps.google.com/?q=Los+Juanes+Taqueria+Guadalajara+29+Roma+Norte+CDMX",     lat:19.4168,  lng:-99.1596,  cat:"tacos",   hours:["—","—","—","—","—","—","—"]},
+  {n:72, name:"Los Rogacianos",      tipo:"Taquería · Suadero",     addr:"Esq. Yucatán y Tonalá, Roma Norte", ig:"",                        gmaps:"https://maps.google.com/?q=Los+Rogacianos+Yucatan+Tonala+Roma+Norte+CDMX",          lat:19.4142,  lng:-99.1632,  cat:"tacos",   hours:["—","—","—","—","—","—","—"]},
+  {n:73, name:"Atarantados",         tipo:"Taquería",               addr:"Córdoba 113, Roma Norte",           ig:"tacosatarantados",        gmaps:"https://maps.google.com/?q=Atarantados+Cordoba+113+Roma+Norte+CDMX",               lat:19.4178,  lng:-99.1582,  cat:"tacos",   hours:["—","—","—","—","—","—","—"]},
+  {n:74, name:"Tacos del Valle",     tipo:"Taquería norteña",       addr:"Pasaje Parián, Álvaro Obregón 130", ig:"tacosdelvalle",           gmaps:"https://maps.google.com/?q=Tacos+del+Valle+Parian+Alvaro+Obregon+130+Roma+CDMX",   lat:19.4177,  lng:-99.1607,  cat:"tacos",   hours:["—","—","—","—","—","—","—"]},
+  {n:75, name:"Los Cocuyos",         tipo:"Taquería 24 hrs",        addr:"Bolívar 56-59, Centro Histórico",   ig:"tacoscocuyos",            gmaps:"https://maps.google.com/?q=Los+Cocuyos+Tacos+Bolivar+56+Centro+Historico+CDMX",    lat:19.4330,  lng:-99.1375,  cat:"tacos",   hours:["24 hrs","24 hrs","24 hrs","24 hrs","24 hrs","24 hrs","24 hrs"]},
+  {n:76, name:"Taquería La Estrella", tipo:"Taquería Durango",      addr:"Londres 208, Juárez",               ig:"taqueria.laestrella",     gmaps:"https://maps.google.com/?q=Taqueria+La+Estrella+Londres+208+Juarez+CDMX",          lat:19.4245,  lng:-99.1668,  cat:"tacos",   hours:["—","—","—","—","—","—","—"]},
+  {n:77, name:"Los Parados",         tipo:"Taquería",               addr:"Av. Monterrey 333, Roma Sur",       ig:"losparadosmx",            gmaps:"https://maps.google.com/?q=Los+Parados+Monterrey+333+Roma+Sur+CDMX",               lat:19.4098,  lng:-99.1622,  cat:"tacos",   hours:["—","—","—","—","—","—","—"]},
+  // ── CANTINAS ──
+  {n:78, name:"Tío Pepe",            tipo:"Cantina tradicional",    addr:"Centro Histórico",                  ig:"",                        gmaps:"https://maps.google.com/?q=Cantina+Tio+Pepe+Centro+Historico+CDMX",                lat:19.4335,  lng:-99.1380,  cat:"cantina", hours:["—","—","—","—","—","—","—"]},
+  {n:79, name:"Tlaquepaque",         tipo:"Cantina tradicional",    addr:"Centro Histórico",                  ig:"",                        gmaps:"https://maps.google.com/?q=Cantina+Tlaquepaque+Centro+Historico+CDMX",             lat:19.4328,  lng:-99.1372,  cat:"cantina", hours:["—","—","—","—","—","—","—"]},
+  {n:80, name:"La Coyoacana",        tipo:"Cantina tradicional",    addr:"Coyoacán",                          ig:"",                        gmaps:"https://maps.google.com/?q=La+Coyoacana+Cantina+Coyoacan+CDMX",                    lat:19.3490,  lng:-99.1620,  cat:"cantina", hours:["—","—","—","—","—","—","—"]},
+];
+
+// ── SIDEBARS ─────────────────────────────────────────────────────────────
+const entryEls = {};
+
+function buildSidebars(cat){
+  const filtered = cat==="all" ? BARS : BARS.filter(b=>b.cat===cat);
+  const half = Math.ceil(filtered.length/2);
+  renderList(filtered.slice(0,half), document.getElementById("sidebar-left"));
+  renderList(filtered.slice(half),   document.getElementById("sidebar-right"));
+}
+
+function renderList(bars, container){
+  container.innerHTML="";
+  let lastCat=null;
+  bars.forEach(bar=>{
+    if(bar.cat!==lastCat){
+      const hdr=document.createElement("div");
+      hdr.className="sidebar-cat-header";
+      hdr.innerHTML=`<div style="color:${catColors[bar.cat]}">${catSVG[bar.cat]}</div><span>${catNames[bar.cat]}</span>`;
+      container.appendChild(hdr);
+      lastCat=bar.cat;
+    }
+    const todayHour=bar.hours[todayIdx];
+    const isOpen=todayHour!=="Cerrado"&&todayHour!=="—";
+    const el=document.createElement("div");
+    el.className="bar-entry";
+    const igLink = bar.ig ? `<a href="https://instagram.com/${bar.ig}" target="_blank">IG</a>` : '';
+    el.innerHTML=`
+      <div class="bar-entry-num">${String(bar.n).padStart(2,"0")}</div>
+      <div class="bar-entry-name">${bar.name}</div>
+      <div class="bar-entry-tipo">${bar.tipo}</div>
+      <div class="bar-entry-hours" style="color:${isOpen?"#c9a84c":"#6a6258"}">${isOpen?"Hoy: "+todayHour:todayHour}</div>
+      <div class="bar-entry-links">
+        ${igLink}
+        <a href="${bar.gmaps}" target="_blank">Maps →</a>
+      </div>`;
+    el.addEventListener("click",()=>{
+      document.querySelectorAll(".bar-entry").forEach(e=>e.classList.remove("highlighted"));
+      el.classList.add("highlighted");
+      if(markerMap[bar.n]){map.setView([bar.lat,bar.lng],16,{animate:true});markerMap[bar.n].openPopup();}
+    });
+    container.appendChild(el);
+    entryEls[bar.n]=el;
+  });
+}
+
+buildSidebars("all");
+
+// ── MAP ───────────────────────────────────────────────────────────────────
+const map=L.map('leaflet-map',{zoomControl:true,scrollWheelZoom:false}).setView([19.4200,-99.1650],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
+
+// Handshake pin
+const hsIcon=L.divIcon({className:'',html:`<div style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="#0a0a0a" stroke="#c9a84c" stroke-width="2.5"/><polygon points="15,6 17.5,12 24,12 19,16.5 21,23 15,19 9,23 11,16.5 6,12 12.5,12" fill="#c9a84c"/></svg></div>`,iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-18]});
+L.marker([19.4253,-99.1640],{icon:hsIcon,zIndexOffset:2000}).addTo(map)
+  .bindPopup(`<div class="p-hs"><div class="p-num">★ Estás aquí</div><div class="p-name">Handshake Speakeasy</div><div class="p-tipo">Speakeasy · Juárez</div><div class="p-addr">Amberes 65, Col. Juárez, CDMX</div><div class="p-links"><a href="https://instagram.com/handshakebar" target="_blank">@handshakebar</a><a href="https://maps.google.com/?q=Handshake+Speakeasy+Amberes+65+Juarez+CDMX" target="_blank">Maps →</a></div></div>`,{maxWidth:220});
+
+function makeIcon(bar){
+  const c=catColors[bar.cat];
+  return L.divIcon({className:'',html:`<div style="width:22px;height:22px;background:${c};border:2px solid rgba(10,10,10,0.8);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.6);font-family:'DM Mono',monospace;font-size:7px;font-weight:500;color:#0a0a0a;line-height:1;">${bar.n}</div>`,iconSize:[22,22],iconAnchor:[11,11],popupAnchor:[0,-14]});
+}
+
+const markerMap={};
+const markersByCat={};
+
+BARS.forEach(bar=>{
+  const todayHour=bar.hours[todayIdx];
+  const igLine=bar.ig?`<a href="https://instagram.com/${bar.ig}" target="_blank">@${bar.ig}</a>`:'';
+  const marker=L.marker([bar.lat,bar.lng],{icon:makeIcon(bar)}).addTo(map)
+    .bindPopup(`<div><div class="p-num">${String(bar.n).padStart(2,"0")}</div><div class="p-name">${bar.name}</div><div class="p-tipo">${bar.tipo}</div><div class="p-addr">${bar.addr}</div><div class="p-hours">Hoy: ${todayHour}</div><div class="p-links">${igLine}<a href="${bar.gmaps}" target="_blank">Maps →</a></div></div>`,{maxWidth:220});
+  marker.on("click",()=>{
+    document.querySelectorAll(".bar-entry").forEach(e=>e.classList.remove("highlighted"));
+    if(entryEls[bar.n]){entryEls[bar.n].classList.add("highlighted");entryEls[bar.n].scrollIntoView({behavior:"smooth",block:"nearest"});}
+  });
+  markerMap[bar.n]=marker;
+  if(!markersByCat[bar.cat])markersByCat[bar.cat]=[];
+  markersByCat[bar.cat].push(marker);
+});
+
+// FILTERS
+document.querySelectorAll(".cat-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".cat-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const cat=btn.dataset.cat;
+    buildSidebars(cat);
+    Object.entries(markersByCat).forEach(([c,markers])=>{
+      markers.forEach(m=>{
+        if(cat==="all"||c===cat){if(!map.hasLayer(m))map.addLayer(m);}
+        else{if(map.hasLayer(m))map.removeLayer(m);}
+      });
+    });
+  });
+});
+
+// QR
+new QRCode(document.getElementById("qr-container"),{text:window.location.href,width:80,height:80,colorDark:"#0a0a0a",colorLight:"#f0ebe2",correctLevel:QRCode.CorrectLevel.M});
+</script>
+</body>
+</html>
